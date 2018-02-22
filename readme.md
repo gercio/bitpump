@@ -1,4 +1,4 @@
-Objat - Open Bitcoin Java Automatic Trader
+BitPump - Pump for your bitcoins!
 =====================================
 
 More information coming soon...

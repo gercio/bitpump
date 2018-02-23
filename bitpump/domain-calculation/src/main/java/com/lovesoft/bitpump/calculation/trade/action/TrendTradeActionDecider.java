@@ -1,12 +1,12 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.google.common.base.Preconditions;
-import com.lovesoft.bitpump.support.OptionalConsumer;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.calculation.HistoricalTransactions;
-import com.lovesoft.bitpump.to.ExchangeDataTO;
 import com.lovesoft.bitpump.support.MathSupport;
+import com.lovesoft.bitpump.support.OptionalConsumer;
 import com.lovesoft.bitpump.support.WithLog;
+import com.lovesoft.bitpump.to.ExchangeDataTO;
+import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.DoubleStream;
 
 /**
  * Simple trader decider, based on trend observation.
@@ -108,7 +107,6 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
 
 
     private double getHighestPrice(List<HistoricalTransactionTO> reversedHistory) {
-//        return getDoubleStream(reversedHistory).max().getAsDouble();
         double highest = -1.0;
         for(HistoricalTransactionTO to: reversedHistory) {
             if(to.getTransactionPrice() > highest) {
@@ -119,7 +117,6 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
     }
 
     private double getLowestPrice(List<HistoricalTransactionTO> reversedHistory) {
-//        return getDoubleStream(reversedHistory).min().getAsDouble();
         double lowest = Double.MAX_VALUE;
         for(HistoricalTransactionTO to: reversedHistory) {
             if(to.getTransactionPrice() < lowest) {
@@ -127,9 +124,5 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
             }
         }
         return lowest;
-    }
-
-    private DoubleStream getDoubleStream(List<HistoricalTransactionTO> reversedHistory) {
-        return reversedHistory.stream().mapToDouble(ht -> ht.getTransactionPrice());
     }
 }

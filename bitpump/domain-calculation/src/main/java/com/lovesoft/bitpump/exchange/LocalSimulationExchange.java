@@ -2,13 +2,13 @@ package com.lovesoft.bitpump.exchange;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
+import com.lovesoft.bitpump.support.ObjatRuntimeException;
+import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAmountTO;
-import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.to.TradeWalletTO;
-import com.lovesoft.bitpump.support.ObjatRuntimeException;
-import com.lovesoft.bitpump.support.WithLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,17 +16,17 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Test class just for simulation/test purpose
+ * Exchange used for simulation/test purpose only
  * @author Patryk Kaluzny 2018.02.09
  */
 
-public class LocalExchange implements Exchange, WithLog {
-    private static Logger LOG = LoggerFactory.getLogger(LocalExchange.class);
+public class LocalSimulationExchange implements Exchange, WithLog {
+    private static Logger LOG = LoggerFactory.getLogger(LocalSimulationExchange.class);
     private List<HistoricalTransactionTO> historicalTransactions;
     private TradeWallet tradeWallet;
     private final double DEFAULT_EXCHANGE_RATE = 100;
 
-    protected LocalExchange(ExchangeDataTO exchangeData, TradeWallet tradeWallet) {
+    protected LocalSimulationExchange(ExchangeDataTO exchangeData, TradeWallet tradeWallet) {
         Preconditions.checkNotNull(exchangeData);
         Preconditions.checkNotNull(tradeWallet);
         this.historicalTransactions = Lists.newArrayList(exchangeData.getHistoricalTransactions());

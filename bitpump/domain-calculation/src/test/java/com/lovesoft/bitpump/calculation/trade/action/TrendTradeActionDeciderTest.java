@@ -63,7 +63,7 @@ public class TrendTradeActionDeciderTest {
 //        ExchangeDataTOBuilder builder = new ExchangeDataTOBuilder();
 //        TraderFactory tf = new TraderFactory();
 //        tf.createDefaultTrader();
-//        LocalExchange exchange = (LocalExchange) tf.getExchange();
+//        LocalSimulationExchange exchange = (LocalSimulationExchange) tf.getExchange();
 //        trendTradeActionDecider = tf.getTradeActionDecider();
 //
 //        exchange.addHistoricalTransactions(builder.createHistoricalTransactions(95d, 96d, 97d, 98d, 99d, 100d));

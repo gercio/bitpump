@@ -2,7 +2,7 @@ package com.lovesoft.bitpump.calculation.trade;
 
 import com.lovesoft.bitpump.ExchangeDataTOBuilder;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
-import com.lovesoft.bitpump.exchange.LocalExchange;
+import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TraderTest {
     private Trader trader;
-    private LocalExchange exchange;
+    private LocalSimulationExchange exchange;
     private TradeWallet tradeWallet;
 
     @BeforeEach
@@ -24,7 +24,7 @@ public class TraderTest {
         TraderFactory traderFactory = new TraderFactory();
         Optional.ofNullable(maximumLoosePercentage).ifPresent( p -> traderFactory.withMaximumLoosePercentage(p));
         trader = traderFactory.createDefaultTrader();
-        exchange = (LocalExchange) traderFactory.getExchange();
+        exchange = (LocalSimulationExchange) traderFactory.getExchange();
         tradeWallet = trader.getActualWallet();
     }
 

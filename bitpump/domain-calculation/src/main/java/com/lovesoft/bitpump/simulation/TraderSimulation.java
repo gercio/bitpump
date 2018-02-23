@@ -3,7 +3,7 @@ package com.lovesoft.bitpump.simulation;
 import com.lovesoft.bitpump.calculation.trade.TraderFactory;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
-import com.lovesoft.bitpump.exchange.LocalExchange;
+import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class TraderSimulation implements Runnable, WithLog {
     public void run() {
         // remove all historical transactions
         TradeWallet tradeWallet = traderFactory.getTradeWallet();
-        LocalExchange exchange = (LocalExchange) traderFactory.getExchange();
+        LocalSimulationExchange exchange = (LocalSimulationExchange) traderFactory.getExchange();
 
         // No DC
         tradeWallet.setDigitalCurrencyAmount(0);

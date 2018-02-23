@@ -14,7 +14,7 @@ public class ExchangeBuilder {
     }
 
     public Exchange build() {
-        return new LocalExchange(exchangeData, tradeWallet); // LocalExchange is just for tests....
+        return new LocalSimulationExchange(exchangeData, tradeWallet); // LocalSimulationExchange is just for tests....
     }
 
     public ExchangeBuilder withTradeWallet(TradeWallet tradeWallet) {

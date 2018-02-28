@@ -3,19 +3,20 @@ package com.lovesoft.bitpump.calculation.trade.action;
 import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.TradeAction;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
 public class TradeActionTrigger implements WithLog {
-    private int targetCount;
+    private int targetBuyCount;
+    private int targetSellCount;
     private int count;
     private Optional<TradeAction> lastAction = Optional.empty();
     private final Logger LOG = LoggerFactory.getLogger(TradeActionTrigger.class);
 
-    public TradeActionTrigger(int targetCount) {
-       setTargetCount(targetCount);
+    public TradeActionTrigger(int targetBuyCount) {
+        setTargetBuyCount(targetBuyCount);
+        setTargetSellCount(targetBuyCount);
     }
 
     public void count(TradeAction tradeAction) {
@@ -35,15 +36,15 @@ public class TradeActionTrigger implements WithLog {
     }
 
     public boolean checkBuyTriggeredAndReset() {
-        return checkIfTriggered(TradeAction.SELL, TradeAction.BUY);
+        return checkIfTriggered(TradeAction.SELL, TradeAction.BUY, targetBuyCount);
     }
 
     public boolean checkSellTriggeredAndReset() {
-        return checkIfTriggered(TradeAction.BUY, TradeAction.SELL);
+        return checkIfTriggered(TradeAction.BUY, TradeAction.SELL, targetSellCount);
     }
 
-    private boolean checkIfTriggered(TradeAction taElse, TradeAction taToCheck) {
-        return Optional.of(count >= targetCount && lastAction.orElse(taElse).equals(taToCheck)).map(isTriggered -> {
+    private boolean checkIfTriggered(TradeAction taElse, TradeAction taToCheck, int target) {
+        return Optional.of(count >= target && lastAction.orElse(taElse).equals(taToCheck)).map(isTriggered -> {
             if(isTriggered) {
                 count = 0;
             }
@@ -51,8 +52,18 @@ public class TradeActionTrigger implements WithLog {
         }).get();
     }
 
+    public void setTargetBuyCount(int targetBuyCount) {
+        Preconditions.checkArgument(targetBuyCount > 0, "Wrong targetBuyCount value " + targetBuyCount);
+        this.targetBuyCount = targetBuyCount;
+    }
+
+    public void setTargetSellCount(int targetSellCount) {
+        Preconditions.checkArgument(targetSellCount > 0, "Wrong targetBuyCount value " + targetSellCount);
+        this.targetSellCount = targetSellCount;
+    }
+
     public void setTargetCount(int targetCount) {
-        Preconditions.checkArgument(targetCount > 0, "Wrong targetCount value " + targetCount);
-        this.targetCount = targetCount;
+        setTargetBuyCount(targetCount);
+        setTargetSellCount(targetCount);
     }
 }

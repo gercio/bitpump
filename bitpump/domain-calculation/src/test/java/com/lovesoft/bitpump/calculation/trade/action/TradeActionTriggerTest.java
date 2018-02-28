@@ -2,11 +2,17 @@ package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.lovesoft.bitpump.to.TradeAction;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TradeActionTriggerTest {
 
     private TradeActionTrigger tradeActionTrigger = new TradeActionTrigger(3);
+
+    @BeforeEach
+    public void beforeEach() {
+        tradeActionTrigger = new TradeActionTrigger(3);
+    }
 
     @Test
     public void testCountBuy() {
@@ -25,6 +31,18 @@ public class TradeActionTriggerTest {
         tradeActionTrigger.count(TradeAction.BUY);
         tradeActionTrigger.count(TradeAction.SELL);
         Assertions.assertFalse(tradeActionTrigger.checkBuyTriggeredAndReset());
+    }
+
+    @Test
+    public void testCountBuyAndThenSellOptimisticScenario() {
+        tradeActionTrigger.setTargetSellCount(2);
+        tradeActionTrigger.count(TradeAction.BUY);
+        tradeActionTrigger.count(TradeAction.BUY);
+        tradeActionTrigger.count(TradeAction.BUY);
+        Assertions.assertTrue(tradeActionTrigger.checkBuyTriggeredAndReset());
+        tradeActionTrigger.count(TradeAction.SELL);
+        tradeActionTrigger.count(TradeAction.SELL);
+        Assertions.assertTrue(tradeActionTrigger.checkSellTriggeredAndReset());
     }
 
     @Test

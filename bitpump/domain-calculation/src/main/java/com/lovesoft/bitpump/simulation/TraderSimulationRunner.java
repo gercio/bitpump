@@ -1,10 +1,12 @@
 package com.lovesoft.bitpump.simulation;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.support.EstimatedTimeToFinish;
 import com.lovesoft.bitpump.support.WithLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.DoubleStream;
@@ -16,6 +18,7 @@ public class TraderSimulationRunner implements WithLog {
     private SimulationParametersTO parameters;
     private HistoricalTransactionSource historical;
     private BestResultFinder bestResultFinder = new BestResultFinder();
+    private EstimatedTimeToFinish timeToFinish;
 
     public TraderSimulationRunner(HistoricalTransactionSource historical, SimulationParametersTO parameters) {
         Preconditions.checkArgument(parameters.getNumberOfThreads() > 0, "To low thread number " + parameters.getNumberOfThreads() );
@@ -25,32 +28,40 @@ public class TraderSimulationRunner implements WithLog {
     }
 
     public void execute() {
+        System.out.println("Starting....");
         logInfo(LOG, "Starting Cosmic Simulation... Please wait a while, I am calculating fast for you (: ");
-        logInfo(LOG, "Using Simulation Parameters -> " + this.parameters);
+        logInfo(LOG, "Using Simulation Parameters -> {}", this.parameters);
         runSimulation();
         waitForSimulationToFinish();
         bestResultFinder.printResultsToLog();
+    }
+
+    public Optional<ParametersTO> getParametersForBestResult() {
+        return bestResultFinder.getBestResult();
     }
 
     private void runSimulation() {
         getPercentageBuyStream()
                 .forEach(percentageBuy ->  getPercentageSellStream()
                 .forEach(percentageSell -> getTriggerTargetStream()
-                .forEach(triggerTargetCount -> getMaximumLooseStream()
+                .forEach(triggerTargetSellCount -> getTriggerTargetStream()
+                .forEach(triggerTargetBuyCount -> getMaximumLooseStream()
                 .forEach(maximumLoosPercentage -> {
 
                     ParametersTO parameters = ParametersTOBuilder.aParametersTO().withHistoricalTransactionSource(historical)
                             .withMaximumLoosePercentage(maximumLoosPercentage)
-                            .withTriggerTargetCount(triggerTargetCount)
+                            .withTriggerTargetSellCount(triggerTargetSellCount)
+                            .withTriggerTargetBuyCount(triggerTargetBuyCount)
                             .withPercentageSel(percentageSell)
                             .withPercentageBuy(percentageBuy).build();
 
                     runSimulation(parameters);
-        }))));
+        })))));
     }
 
     private void waitForSimulationToFinish() {
         try {
+            timeToFinish = new EstimatedTimeToFinish( executor.getTaskCount());
             logInfo(LOG, "Waiting for execution. Task to be finished: " + executor.getTaskCount());
             boolean isFinished = isFinished();
             while (!isFinished) {
@@ -68,7 +79,9 @@ public class TraderSimulationRunner implements WithLog {
     private void printProgress() {
         StringBuilder sb = new StringBuilder();
         sb.append("Progress " + executor.getCompletedTaskCount() + " / " + executor.getTaskCount());
-        bestResultFinder.getActualBestResult().ifPresent( r -> sb.append(String.format("\t\t Actual best result = %5.2f" ,r)));
+        sb.append("\t Time to finish [" + timeToFinish.printEstimatedTimeToFinish(executor.getCompletedTaskCount()) + "] ");
+        bestResultFinder.getActualBestResult().ifPresent( r -> sb.append(String.format("\t\t Best result = %5.2f" ,r)));
+        bestResultFinder.getActualBestResultParameters().ifPresent(p -> sb.append(" for parameters " + p));
         System.out.println(sb.toString());
     }
 
@@ -85,12 +98,16 @@ public class TraderSimulationRunner implements WithLog {
         simulation.setStatisticsConsumer( st -> bestResultFinder.findBestResult(st, parameters) );
     }
 
-    private DoubleStream getMaximumLooseStream() {
-        return getDoubleStream(parameters.getMaximumLoosePercentageFrom(), parameters.getMaximumLoosePercentageTo());
+    private IntStream getMaximumLooseStream() {
+        return getIntStream((int) parameters.getMaximumLoosePercentageFrom(), (int) parameters.getMaximumLoosePercentageTo());
     }
 
     private IntStream getTriggerTargetStream() {
-        return IntStream.iterate((parameters.getTriggerTargetCountFrom()), n -> n + 1).limit((parameters.getTriggerTargetCountTo()) - parameters.getTriggerTargetCountFrom() + 1);
+        return IntStream.iterate((parameters.getTriggerTargetCountFrom()), n -> n + 1).limit(parameters.getTriggerTargetCountTo() - parameters.getTriggerTargetCountFrom() + 1);
+    }
+
+    private IntStream getIntStream(int from, int to) {
+        return IntStream.iterate(from, n -> n + 1).limit(to - from + 1);
     }
 
     private DoubleStream getPercentageSellStream() {

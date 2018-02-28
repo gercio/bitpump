@@ -42,8 +42,22 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
         this.trigger.setTargetCount(targetCount);
     }
 
+    public void setTargetBuyCount(int targetBuyCount) {
+        trigger.setTargetBuyCount(targetBuyCount);
+    }
+
+    public void setTargetSellCount(int targetSellCount) {
+        trigger.setTargetSellCount(targetSellCount);
+    }
+
     @Override
-    public Optional<TradeAction> calculateTradeAction() {
+    public void loadHistoricalData(List<HistoricalTransactionTO> historicalTransactions) {
+        transactions.addAll(historicalTransactions);
+    }
+
+    @Override
+    public Optional<TradeAction> calculateTradeAction(ExchangeDataTO exchangeData) {
+        transactions.addAll(exchangeData.getHistoricalTransactions());
         if(transactions.isEmpty()) {
             logDebug(LOG, "No historical transactions. No trade Action.");
             return Optional.empty();
@@ -58,11 +72,6 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
     private void afterTradeActionFinding(TradeAction tradeAction) {
         // Clear history - we do not need to keep it back, since trade action was made
         transactions.clearAndTakeOnlyNewest();
-    }
-
-    @Override
-    public void loadExchangeData(ExchangeDataTO exchangeData) {
-        transactions.addAll(exchangeData.getHistoricalTransactions());
     }
 
     private List<HistoricalTransactionTO> reverseHistory() {

@@ -31,7 +31,7 @@ public class TraderTest {
     @Test
     public void testTradeWithBuy() {
         tradeWallet.setMoneyAmount(100);
-        exchange.addHistoricalTransactions(new ExchangeDataTOBuilder().createHistoricalTransactions(10d, 20d, 30d, 100d));
+        exchange.keepOnlyThisHistoricalTransaction(new ExchangeDataTOBuilder().createHistoricalTransactions(10d, 20d, 30d, 100d));
 
         // test
         trader.doTrades();
@@ -46,7 +46,7 @@ public class TraderTest {
     public void testTradeWithSell() {
         tradeWallet.setMoneyAmount(100);
         tradeWallet.setDigitalCurrencyAmount(2);
-        exchange.addHistoricalTransactions(new ExchangeDataTOBuilder().createHistoricalTransactions(100d, 90d, 70d, 60d));
+        exchange.keepOnlyThisHistoricalTransaction(new ExchangeDataTOBuilder().createHistoricalTransactions(100d, 90d, 70d, 60d));
 
         // test
         trader.doTrades();
@@ -72,12 +72,12 @@ public class TraderTest {
         createTrader(50.0);
         ExchangeDataTOBuilder builder = new ExchangeDataTOBuilder();
         tradeWallet.setMoneyAmount(100);
-        exchange.addHistoricalTransactions(builder.createHistoricalTransactions(10d, 20d, 30d, 100d));
+        exchange.keepOnlyThisHistoricalTransaction(builder.createHistoricalTransactions(10d, 20d, 30d, 100d));
         // Buy
         trader.doTrades();
 
         // Now simulate crash!
-        exchange.addHistoricalTransactions(builder.createHistoricalTransactions(20d, 10d, 9d, 1d));
+        exchange.keepOnlyThisHistoricalTransaction(builder.createHistoricalTransactions(20d, 10d, 9d, 1d));
         trader.doTrades();
 
         // Everything should be sold out!

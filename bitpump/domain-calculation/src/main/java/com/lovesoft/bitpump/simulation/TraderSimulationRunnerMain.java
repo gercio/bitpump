@@ -6,21 +6,22 @@ public class TraderSimulationRunnerMain {
 
     public static void main(String[] arg) {
         SimulationHistoricalTransaction simulationHistoricalTransaction = new SimulationHistoricalTransaction();
-        simulationHistoricalTransaction.setChartName(ChartName.Bitmarket24_02);
+        simulationHistoricalTransaction.setChartName(ChartName.Bitmarket24_04);
         new TraderSimulationRunner(simulationHistoricalTransaction, getParameters()).execute();
     }
 
     public static SimulationParametersTO getParameters() {
         return SimulationParametersTOBuilder.aSimulationParametersTO()
-                .withDoubleStep(0.3)
-                .withPercentageBuyFrom(0.1)
-                .withPercentageBuyTo(5.0)
-                .withPercentageSelFrom(0.1)
-                .withPercentageSelTo(5.0)
+                .withDoubleStep(0.01)
+                .withPercentageBuyFrom(2.1)
+                .withPercentageBuyTo(2.3)
+                .withPercentageSelFrom(0.6)
+                .withPercentageSelTo(0.8)
                 .withTriggerTargetCountFrom(1)
-                .withTriggerTargetCountTo(10)
-                .withMaximumLoosePercentageFrom(5)
-                .withMaximumLoosePercentageTo(15)
+                .withTriggerTargetCountTo(9)
+                .withMaximumLoosePercentageFrom(4)
+                .withMaximumLoosePercentageTo(7)
+                .withNumberOfThreads(5)
                 .build();
     }
 }

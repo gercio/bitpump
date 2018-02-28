@@ -17,6 +17,7 @@ public class BestResultFinderTest {
         findBestResult(finder, -1.0, -10.0);
 
         Assertions.assertTrue(finder.getActualBestResult().get() == 5.1);
+        Assertions.assertTrue(finder.getActualBestResultParameters().isPresent());
         String results = finder.getResults();
         Assertions.assertTrue(results.contains("5.1"), "Bad results: " + results);
     }

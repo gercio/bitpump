@@ -45,13 +45,13 @@ public class SimpleTrader implements Trader, WithLog {
         if(tradeWallet.isEmpty()) {
             logWarn(LOG, "Wallet is empty - no trade will be made! Please top up your wallet :)");
         } else {
-            tradeActionDecider.loadExchangeData(exchangeData);
+            Optional<TradeAction> optionalTradeAction = tradeActionDecider.calculateTradeAction(exchangeData);
             if(isStopLoose()) {
                 // Now do panic sell!!!
                 logDebug(LOG, "Stop loos started! Exchange rate goes so low {} that we need to sell it all!", tradeData.getSellExchangeRate());
                 letsTrade(TradeAction.SELL, exchangeData);
             } else {
-                tradeActionDecider.calculateTradeAction().ifPresent(ta -> letsTrade(ta, exchangeData));
+                optionalTradeAction.ifPresent(ta -> letsTrade(ta, exchangeData));
             }
         }
     }

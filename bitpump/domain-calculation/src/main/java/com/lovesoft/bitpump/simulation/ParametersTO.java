@@ -1,11 +1,11 @@
 package com.lovesoft.bitpump.simulation;
 
-import java.util.Objects;
 
 public class ParametersTO {
     private double percentageBuy;
     private double percentageSel;
-    private int triggerTargetCount;
+    private int triggerTargetBuyCount;
+    private int triggerTargetSellCount;
     private double maximumLoosePercentage;
     private HistoricalTransactionSource historicalTransactionSource;
 
@@ -25,12 +25,12 @@ public class ParametersTO {
         this.percentageSel = percentageSel;
     }
 
-    public int getTriggerTargetCount() {
-        return triggerTargetCount;
+    public int getTriggerTargetBuyCount() {
+        return triggerTargetBuyCount;
     }
 
-    public void setTriggerTargetCount(int triggerTargetCount) {
-        this.triggerTargetCount = triggerTargetCount;
+    public void setTriggerTargetBuyCount(int triggerTargetBuyCount) {
+        this.triggerTargetBuyCount = triggerTargetBuyCount;
     }
 
     public double getMaximumLoosePercentage() {
@@ -49,31 +49,54 @@ public class ParametersTO {
         this.historicalTransactionSource = historicalTransactionSource;
     }
 
-    @Override
-    public String toString() {
-        return "ParametersTO{" +
-                "percentageBuy=" + percentageBuy +
-                ", percentageSel=" + percentageSel +
-                ", triggerTargetCount=" + triggerTargetCount +
-                ", maximumLoosePercentage=" + maximumLoosePercentage +
-                '}';
+    public int getTriggerTargetSellCount() {
+        return triggerTargetSellCount;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public void setTriggerTargetSellCount(int triggerTargetSellCount) {
+        this.triggerTargetSellCount = triggerTargetSellCount;
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
         ParametersTO that = (ParametersTO) o;
-        return Double.compare(that.percentageBuy, percentageBuy) == 0 &&
-                Double.compare(that.percentageSel, percentageSel) == 0 &&
-                triggerTargetCount == that.triggerTargetCount &&
-                Double.compare(that.maximumLoosePercentage, maximumLoosePercentage) == 0;
+
+        if (Double.compare(that.percentageBuy, percentageBuy) != 0)
+            return false;
+        if (Double.compare(that.percentageSel, percentageSel) != 0)
+            return false;
+        if (triggerTargetBuyCount != that.triggerTargetBuyCount)
+            return false;
+        if (triggerTargetSellCount != that.triggerTargetSellCount)
+            return false;
+        if (Double.compare(that.maximumLoosePercentage, maximumLoosePercentage) != 0)
+            return false;
+        return historicalTransactionSource != null ?
+                historicalTransactionSource.equals(that.historicalTransactionSource) :
+                that.historicalTransactionSource == null;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(percentageBuy, percentageSel, triggerTargetCount, maximumLoosePercentage);
+    @Override public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(percentageBuy);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(percentageSel);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + triggerTargetBuyCount;
+        result = 31 * result + triggerTargetSellCount;
+        temp = Double.doubleToLongBits(maximumLoosePercentage);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (historicalTransactionSource != null ? historicalTransactionSource.hashCode() : 0);
+        return result;
     }
 
-
+    @Override public String toString() {
+        return "ParametersTO{" + "percentageBuy=" + percentageBuy + ", percentageSel=" + percentageSel + ", triggerTargetBuyCount=" + triggerTargetBuyCount
+                + ", triggerTargetSellCount=" + triggerTargetSellCount + ", maximumLoosePercentage=" + maximumLoosePercentage  + '}';
+    }
 }

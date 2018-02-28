@@ -1,8 +1,10 @@
 package com.lovesoft.bitpump.simulation;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import com.google.common.util.concurrent.Atomics;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
 import com.lovesoft.bitpump.support.WithLog;
+import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +16,10 @@ import java.util.TreeMap;
 public class BestResultFinder implements WithLog {
     private SortedMap<Double, ParametersTO> sortedResult = Collections.synchronizedSortedMap(new TreeMap<>());
     private final static Logger LOG = LoggerFactory.getLogger(BestResultFinder.class);
-    private final double NO_RESULT = -999999991;
+    private final double NO_RESULT = -999999991; // Probably this can be removed
     private final long MAX_RESULTS;
     private AtomicDouble bestResultPercentage = new AtomicDouble(NO_RESULT);
+    private AtomicReference<ParametersTO> bestParameters = new AtomicReference<>();
 
     public BestResultFinder() {
         MAX_RESULTS = 100;
@@ -31,6 +34,7 @@ public class BestResultFinder implements WithLog {
         if(!sortedResult.isEmpty() && sortedResult.lastKey() < percentage) {
             logInfo(LOG, "New best result  {} %  for parameters {}", percentage, simulationParameters);
             bestResultPercentage.set(percentage);
+            bestParameters.set(simulationParameters);
         }
         sortedResult.put(percentage, simulationParameters);
         if(sortedResult.size() > MAX_RESULTS) {
@@ -46,6 +50,10 @@ public class BestResultFinder implements WithLog {
         return Optional.of(bestResultPercentage.get());
     }
 
+    public Optional<ParametersTO> getActualBestResultParameters() {
+        return Optional.ofNullable(bestParameters.get());
+    }
+
     public void printResultsToLog() {
         logInfo(LOG, getResults());
     }
@@ -59,5 +67,12 @@ public class BestResultFinder implements WithLog {
             sortedResult.subMap(bestResult - 5, bestResult + 0.1).forEach( (p, param) -> sb.append("--> Found best result " + p + " %  for parameters " + param + " \n"));
             return sb.toString();
         }
+    }
+
+    public Optional<ParametersTO> getBestResult() {
+        if(sortedResult.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(sortedResult.get(sortedResult.lastKey()));
     }
 }

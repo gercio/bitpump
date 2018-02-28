@@ -4,13 +4,13 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class OptionalConsumerBoolean<T> {
-    private Optional<T> optional;
-    private Optional<Boolean> result = Optional.empty();
+    private OptionalConsumerWithResult<T, Boolean> consumer;
 
     private OptionalConsumerBoolean(Optional<T> optional) {
-        this.optional = optional;
+        this.consumer = OptionalConsumerWithResult.of(optional, Boolean.class);
     }
 
     public static <T> OptionalConsumerBoolean<T> of(Optional<T> optional) {
@@ -18,19 +18,15 @@ public class OptionalConsumerBoolean<T> {
     }
 
     public OptionalConsumerBoolean<T> ifPresent(Function<T, Boolean> c) {
-        if(optional.isPresent()) {
-            result = Optional.of(c.apply(optional.get()));
-        }
-        return this;
+       consumer.ifPresent(c);
+       return this;
     }
 
-    public OptionalConsumerBoolean<T> ifNotPresent(BooleanSupplier s) {
-        if (!optional.isPresent()) {
-            result = Optional.of(s.getAsBoolean());
-        }
-        return this;
+    public OptionalConsumerBoolean<T> ifNotPresent(Supplier<Boolean> s) {
+       consumer.ifNotPresent(s);
+       return this;
     }
     public boolean getBoolean() {
-        return result.orElseThrow(() -> new IllegalStateException("Please use ifPresent or ifNotPresent before this method"));
+        return consumer.getResult().orElseThrow(() -> new IllegalStateException("Please use ifPresent or ifNotPresent before this method."));
     }
 }

@@ -27,7 +27,8 @@ public class TraderSimulation implements Runnable, WithLog {
         traderFactory = new TraderFactory();
         traderFactory.withMaximumHistoricalTransactions(10000).withPercentageUpBuy(parameters.getPercentageBuy())
                 .withPercentageDownSell(parameters.getPercentageSel())
-                .withTriggerTargetCount(parameters.getTriggerTargetCount())
+                .withTriggerTargetBuyCount(parameters.getTriggerTargetBuyCount())
+                .withTriggerTargetSellCount(parameters.getTriggerTargetSellCount())
                 .withMaximumLoosePercentage(parameters.getMaximumLoosePercentage())
                 .createDefaultTrader();
         counter = 0;
@@ -52,9 +53,8 @@ public class TraderSimulation implements Runnable, WithLog {
         tradeWalletStatistics.start(tradeWallet.getTraderWalletTO());
 
         historicalTransactionSource.getHistoricalTransactions().forEach(exchangeRate -> {
-            // FIXME This looks slow in profiler!
             // Simulate that something new trade came up
-            exchange.addHistoricalTransactions( new HistoricalTransactionTO(counter++,exchangeRate));
+            exchange.keepOnlyThisHistoricalTransaction(new HistoricalTransactionTO(counter++, exchangeRate));
 
             // Do trading!
             if(LOG.isDebugEnabled()) {
@@ -64,7 +64,7 @@ public class TraderSimulation implements Runnable, WithLog {
         } );
         tradeWalletStatistics.updateWalletTO(tradeWallet.getTraderWalletTO());
         statisticsConsumer.ifPresent(c -> c.accept(tradeWalletStatistics));
-        logInfo(LOG, "Result for {} is  percentage = {}", parameters.toString(), getTradeWalletStatistics().calculateAssetChangeInPercentage() );
+        logDebug(LOG, "Result for {} is  percentage = {}", parameters.toString(), getTradeWalletStatistics().calculateAssetChangeInPercentage() );
     }
 
     public TradeWalletStatistics getTradeWalletStatistics() {

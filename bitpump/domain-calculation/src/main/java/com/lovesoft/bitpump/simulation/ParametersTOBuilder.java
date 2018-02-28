@@ -3,7 +3,8 @@ package com.lovesoft.bitpump.simulation;
 public final class ParametersTOBuilder {
     private double percentageBuy;
     private double percentageSel;
-    private int triggerTargetCount;
+    private int triggerTargetBuyCount;
+    private int triggerTargetSellCount;
     private double maximumLoosePercentage;
     private HistoricalTransactionSource historicalTransactionSource;
 
@@ -24,8 +25,13 @@ public final class ParametersTOBuilder {
         return this;
     }
 
-    public ParametersTOBuilder withTriggerTargetCount(int triggerTargetCount) {
-        this.triggerTargetCount = triggerTargetCount;
+    public ParametersTOBuilder withTriggerTargetBuyCount(int triggerTargetCount) {
+        this.triggerTargetBuyCount = triggerTargetCount;
+        return this;
+    }
+
+    public ParametersTOBuilder withTriggerTargetSellCount(int triggerTargetSellCount) {
+        this.triggerTargetSellCount = triggerTargetSellCount;
         return this;
     }
 
@@ -43,7 +49,8 @@ public final class ParametersTOBuilder {
         ParametersTO parametersTO = new ParametersTO();
         parametersTO.setPercentageBuy(percentageBuy);
         parametersTO.setPercentageSel(percentageSel);
-        parametersTO.setTriggerTargetCount(triggerTargetCount);
+        parametersTO.setTriggerTargetBuyCount(triggerTargetBuyCount);
+        parametersTO.setTriggerTargetSellCount(triggerTargetSellCount);
         parametersTO.setMaximumLoosePercentage(maximumLoosePercentage);
         parametersTO.setHistoricalTransactionSource(historicalTransactionSource);
         return parametersTO;

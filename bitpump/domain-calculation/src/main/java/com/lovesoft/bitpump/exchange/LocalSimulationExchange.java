@@ -81,11 +81,12 @@ public class LocalSimulationExchange implements Exchange, WithLog {
         return htList.get(htList.size() - 1).getTransactionPrice();
     }
 
-    public void addHistoricalTransactions(Collection<HistoricalTransactionTO> historicalTransactions) {
+    public void keepOnlyThisHistoricalTransaction(Collection<HistoricalTransactionTO> historicalTransactions) {
         this.historicalTransactions.addAll( historicalTransactions);
     }
 
-    public void addHistoricalTransactions(HistoricalTransactionTO historicalTransaction) {
+    public void keepOnlyThisHistoricalTransaction(HistoricalTransactionTO historicalTransaction) {
+        this.historicalTransactions.clear();
         this.historicalTransactions.add( historicalTransaction);
     }
 }

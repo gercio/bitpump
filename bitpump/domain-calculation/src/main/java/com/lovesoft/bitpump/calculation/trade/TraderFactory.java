@@ -1,7 +1,9 @@
 package com.lovesoft.bitpump.calculation.trade;
 
+import com.lovesoft.bitpump.calculation.trade.action.SimulationActionDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionDecider;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionDeciderBuilder;
+import com.lovesoft.bitpump.calculation.trade.action.TrendActionDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.amount.TradeAmountDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.support.OptionalConsumer;
@@ -17,7 +19,9 @@ public class TraderFactory {
     private TradeWallet tradeWallet;
     private Trader trader;
     private TradeActionDecider tradeActionDecider;
-    private TradeActionDeciderBuilder tradeActionDeciderBuilder = new TradeActionDeciderBuilder();
+    private TrendActionDeciderBuilder tradeActionDeciderBuilder = new TradeActionDeciderBuilder().buildTrendTradeActionDecider();
+    private SimulationActionDeciderBuilder simulationActionDeciderBuilder = new TradeActionDeciderBuilder().buildSimulationActionDecider();
+
     private Optional<Double> stopLoosPercentageOptional = Optional.empty();
 
     public TraderFactory() {
@@ -50,11 +54,17 @@ public class TraderFactory {
         return this;
     }
 
-    public TraderFactory withTriggerTargetCount(int triggerTargetCount) {
-        this.tradeActionDeciderBuilder.withTriggerTargetCount(triggerTargetCount);
+    public TraderFactory withTriggerTargetBuyCount(int triggerTargetCount) {
+        this.tradeActionDeciderBuilder.withTriggerTargetBuyCount(triggerTargetCount);
         return this;
     }
 
+    public TraderFactory withTriggerTargetSellCount(int triggerTargetCount) {
+        this.tradeActionDeciderBuilder.withTriggerTargetSellCount(triggerTargetCount);
+        return this;
+    }
+
+    // TODO separate factory from builders!
 
     public Trader createDefaultTrader() {
         tradeWallet = new TradeWallet( new TradeWalletTO(0,0));

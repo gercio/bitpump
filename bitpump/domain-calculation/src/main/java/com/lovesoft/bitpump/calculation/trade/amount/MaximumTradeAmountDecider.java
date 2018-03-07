@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.to.TradeAction;
 import com.lovesoft.bitpump.to.TradeAmountTO;
 import com.lovesoft.bitpump.to.TradeWalletTO;
-import com.lovesoft.bitpump.support.ObjatRuntimeException;
+import com.lovesoft.bitpump.support.BitPumpRuntimeException;
 import com.lovesoft.bitpump.support.WithLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class MaximumTradeAmountDecider implements TradeAmountDecider, WithLog {
                 logDebug(LOG, "Let's sell some digital currency.");
                 return calculateTradeAmount(tradeAction, tradeWallet.haveNoDigitalCurrency(), tradeWallet.getDigitalCurrencyAmount());
             default:
-                throw new ObjatRuntimeException("Unknown TradeAction " + tradeAction);
+                throw new BitPumpRuntimeException("Unknown TradeAction " + tradeAction);
         }
     }
 

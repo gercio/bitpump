@@ -1,5 +1,6 @@
 package com.lovesoft.bitpump.simulation;
 
+import com.lovesoft.bitpump.calculation.Parameters;
 import com.lovesoft.bitpump.calculation.trade.TraderFactory;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
@@ -18,11 +19,11 @@ public class TraderSimulation implements Runnable, WithLog {
     private TradeWalletStatistics tradeWalletStatistics;
     private HistoricalTransactionSource historicalTransactionSource;
     private Logger LOG = LoggerFactory.getLogger(TraderSimulation.class);
-    private ParametersTO parameters;
+    private String parameters;
     private Optional<Consumer<TradeWalletStatistics>> statisticsConsumer = Optional.empty();
 
     public TraderSimulation(ParametersTO parameters) {
-        this.parameters = parameters;
+        this.parameters = parameters.toString();
         historicalTransactionSource = parameters.getHistoricalTransactionSource();
         traderFactory = new TraderFactory();
         traderFactory.withMaximumHistoricalTransactions(10000).withPercentageUpBuy(parameters.getPercentageBuy())
@@ -31,6 +32,15 @@ public class TraderSimulation implements Runnable, WithLog {
                 .withTriggerTargetSellCount(parameters.getTriggerTargetSellCount())
                 .withMaximumLoosePercentage(parameters.getMaximumLoosePercentage())
                 .createDefaultTrader();
+        counter = 0;
+        tradeWalletStatistics = new TradeWalletStatistics(traderFactory.getExchange());
+    }
+
+    public TraderSimulation(Parameters parameters, HistoricalTransactionSource historicalTransactionSource)  {
+        this.parameters = parameters.toString();
+        this.historicalTransactionSource =  historicalTransactionSource;
+        traderFactory = new TraderFactory();
+        traderFactory.withParameters(parameters).createDefaultTrader();
         counter = 0;
         tradeWalletStatistics = new TradeWalletStatistics(traderFactory.getExchange());
     }

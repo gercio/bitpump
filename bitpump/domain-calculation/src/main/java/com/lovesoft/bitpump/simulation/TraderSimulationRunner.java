@@ -19,12 +19,22 @@ public class TraderSimulationRunner implements WithLog {
     private HistoricalTransactionSource historical;
     private BestResultFinder bestResultFinder = new BestResultFinder();
     private EstimatedTimeToFinish timeToFinish;
+    private long sleepTime = 2000;
+    private boolean printProgreess = true;
 
     public TraderSimulationRunner(HistoricalTransactionSource historical, SimulationParametersTO parameters) {
         Preconditions.checkArgument(parameters.getNumberOfThreads() > 0, "To low thread number " + parameters.getNumberOfThreads() );
         this.executor = new ScheduledThreadPoolExecutor(parameters.getNumberOfThreads());
         this.historical = historical;
         this.parameters = parameters;
+    }
+
+    public void setSleepTime(long sleepTime) {
+        this.sleepTime = sleepTime;
+    }
+
+    public void setPrintProgreess(boolean printProgreess) {
+        this.printProgreess = printProgreess;
     }
 
     public void execute() {
@@ -65,7 +75,7 @@ public class TraderSimulationRunner implements WithLog {
             logInfo(LOG, "Waiting for execution. Task to be finished: " + executor.getTaskCount());
             boolean isFinished = isFinished();
             while (!isFinished) {
-                Thread.sleep(2000);
+                Thread.sleep(sleepTime);
                 printProgress();
                 isFinished = isFinished();
             }
@@ -77,12 +87,14 @@ public class TraderSimulationRunner implements WithLog {
     }
 
     private void printProgress() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Progress " + executor.getCompletedTaskCount() + " / " + executor.getTaskCount());
-        sb.append("\t Time to finish [" + timeToFinish.printEstimatedTimeToFinish(executor.getCompletedTaskCount()) + "] ");
-        bestResultFinder.getActualBestResult().ifPresent( r -> sb.append(String.format("\t\t Best result = %5.2f" ,r)));
-        bestResultFinder.getActualBestResultParameters().ifPresent(p -> sb.append(" for parameters " + p));
-        System.out.println(sb.toString());
+        if(printProgreess) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Progress " + executor.getCompletedTaskCount() + " / " + executor.getTaskCount());
+            sb.append("\t Time to finish [" + timeToFinish.printEstimatedTimeToFinish(executor.getCompletedTaskCount()) + "] ");
+            bestResultFinder.getActualBestResult().ifPresent( r -> sb.append(String.format("\t\t Best result = %5.2f" ,r)));
+            bestResultFinder.getActualBestResultParameters().ifPresent(p -> sb.append(" for parameters " + p));
+            System.out.println(sb.toString());
+        }
     }
 
     private boolean isFinished() {

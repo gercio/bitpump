@@ -3,7 +3,7 @@ package com.lovesoft.bitpump.exchange;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
-import com.lovesoft.bitpump.support.ObjatRuntimeException;
+import com.lovesoft.bitpump.support.BitPumpRuntimeException;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
@@ -45,14 +45,14 @@ public class LocalSimulationExchange implements Exchange, WithLog {
 
         amount.getAction().runIfBuy(() -> {
             if(amount.getAmount() > tradeWallet.getMoneyAmount()) {
-                throw new ObjatRuntimeException("Not enough money to do transaction. In wallet is " + tradeWallet.getMoneyAmount() + " and requested amount is " + amount.getAmount());
+                throw new BitPumpRuntimeException("Not enough money to do transaction. In wallet is " + tradeWallet.getMoneyAmount() + " and requested amount is " + amount.getAmount());
             }
             tradeWallet.addMoneyAmount(-amount.getAmount());
             tradeWallet.addDigitalCurrency( calculateDCFromMoney(amount.getAmount()));
 
         }).runIfSell(() -> {
             if(amount.getAmount() > tradeWallet.getDigitalCurrencyAmount()) {
-                throw new ObjatRuntimeException("Not enough digital currency to do transaction. In wallet is " + tradeWallet.getDigitalCurrencyAmount() + " and requested amount is " + amount.getAmount());
+                throw new BitPumpRuntimeException("Not enough digital currency to do transaction. In wallet is " + tradeWallet.getDigitalCurrencyAmount() + " and requested amount is " + amount.getAmount());
             }
             tradeWallet.addMoneyAmount(calculateMoneyFromDC(amount.getAmount()));
             tradeWallet.addDigitalCurrency( -amount.getAmount());

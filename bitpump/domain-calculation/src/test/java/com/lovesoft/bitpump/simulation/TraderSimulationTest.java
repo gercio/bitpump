@@ -1,5 +1,7 @@
 package com.lovesoft.bitpump.simulation;
 
+import com.lovesoft.bitpump.calculation.Parameters;
+import com.lovesoft.bitpump.calculation.trade.TraderFactory;
 import com.lovesoft.bitpump.simulation.SimulationDataSupport.ChartName;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
 import org.junit.jupiter.api.Assertions;
@@ -24,6 +26,10 @@ public class TraderSimulationTest {
                 .withMaximumLoosePercentage(maximumLoosePercentage)
                 .withHistoricalTransactionSource(history).build();
         simulation = new TraderSimulation(parametersTO);
+    }
+
+    private void initializeTest(Parameters parameters) {
+        simulation = new TraderSimulation(parameters, history);
     }
 
     @Test
@@ -89,6 +95,29 @@ public class TraderSimulationTest {
         // New best result  11.184704952107936 %  for parameters ParametersTO{percentageBuy=2.2, percentageSel=0.7, triggerTargetCount=4, maximumLoosePercentage=5.0}
         initializeTest(2.2, 0.7, 4, 5.0);
         doTrade(ChartName.Bitmarket24_04);
+        Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 11, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
+    }
+
+    @Test
+    public void testBitmarket24_05_simulation() {
+        // New best result  11.184704952107936 %  for parameters ParametersTO{percentageBuy=2.2, percentageSel=0.7, triggerTargetCount=4, maximumLoosePercentage=5.0}
+        Parameters parameters = new Parameters();
+
+        parameters.put(TraderFactory.ACTION_DECIDER_BUILDER_NAME, TraderFactory.SIMULATION_ACTION_DECIDER);
+        parameters.put(TraderFactory.NUMBER_OF_THREADS, 4);
+        parameters.put(TraderFactory.DOUBLE_STEP, 0.5);
+        parameters.put(TraderFactory.MAXIMUM_LOOSE_PERCENTAGE_FROM, 4);
+        parameters.put(TraderFactory.MAXIMUM_LOOSE_PERCENTAGE_TO, 6);
+        parameters.put(TraderFactory.PERCENTAGE_BUY_FROM, 0.1);
+        parameters.put(TraderFactory.PERCENTAGE_SEL_FROM, 0.1);
+        parameters.put(TraderFactory.PERCENTAGE_BUY_TO, 3);
+        parameters.put(TraderFactory.PERCENTAGE_SEL_TO, 3);
+        parameters.put(TraderFactory.TRIGGER_TARGET_COUNT_FROM, 1);
+        parameters.put(TraderFactory.TRIGGER_TARGET_COUNT_TO, 10);
+        parameters.put(TraderFactory.NUMBER_OF_HISTORICAL_DATA_TO_RUN_SIMULATION, 500);
+
+        initializeTest(parameters);
+        doTrade(ChartName.Bitmarket24_05);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 11, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 

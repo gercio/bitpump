@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimulationDataSupport {
-    public enum ChartName{chart01, chart02, chart03, chart04, Bitmarket24_01, Bitmarket24_02, Bitmarket24_03, Bitmarket24_04}
+    public enum ChartName{chart01, chart02, chart03, chart04, Bitmarket24_01, Bitmarket24_02, Bitmarket24_03, Bitmarket24_04, Bitmarket24_05}
 
     public List<Double> readChart(ChartName chartName) {
         InputStream is = getInputStream(chartName);

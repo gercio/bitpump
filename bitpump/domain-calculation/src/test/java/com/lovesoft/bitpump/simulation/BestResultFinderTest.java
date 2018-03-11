@@ -1,9 +1,11 @@
 package com.lovesoft.bitpump.simulation;
 
-import static org.mockito.Mockito.*;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class BestResultFinderTest {
 
@@ -19,7 +21,7 @@ public class BestResultFinderTest {
         Assertions.assertTrue(finder.getActualBestResult().get() == 5.1);
         Assertions.assertTrue(finder.getActualBestResultParameters().isPresent());
         String results = finder.getResults();
-        Assertions.assertTrue(results.contains("5.1"), "Bad results: " + results);
+        Assertions.assertTrue(results.contains("50.0"), "Bad results: " + results);
     }
 
     private void findBestResult(BestResultFinder finder, double percentage, double percentageBuy) {

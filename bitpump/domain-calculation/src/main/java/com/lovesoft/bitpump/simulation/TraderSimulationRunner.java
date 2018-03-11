@@ -3,14 +3,13 @@ package com.lovesoft.bitpump.simulation;
 import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.support.EstimatedTimeToFinish;
 import com.lovesoft.bitpump.support.WithLog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TraderSimulationRunner implements WithLog {
     private final static Logger LOG = LoggerFactory.getLogger(TraderSimulationRunner.class);
@@ -27,6 +26,7 @@ public class TraderSimulationRunner implements WithLog {
         this.executor = new ScheduledThreadPoolExecutor(parameters.getNumberOfThreads());
         this.historical = historical;
         this.parameters = parameters;
+        logInfo(LOG, "Using Simulation Parameters -> {}", this.parameters);
     }
 
     public void setSleepTime(long sleepTime) {
@@ -38,12 +38,10 @@ public class TraderSimulationRunner implements WithLog {
     }
 
     public void execute() {
-        System.out.println("Starting....");
         logInfo(LOG, "Starting Cosmic Simulation... Please wait a while, I am calculating fast for you (: ");
-        logInfo(LOG, "Using Simulation Parameters -> {}", this.parameters);
         runSimulation();
         waitForSimulationToFinish();
-        bestResultFinder.printResultsToLog();
+        bestResultFinder.getResults();
     }
 
     public Optional<ParametersTO> getParametersForBestResult() {
@@ -63,7 +61,10 @@ public class TraderSimulationRunner implements WithLog {
                             .withTriggerTargetSellCount(triggerTargetSellCount)
                             .withTriggerTargetBuyCount(triggerTargetBuyCount)
                             .withPercentageSel(percentageSell)
-                            .withPercentageBuy(percentageBuy).build();
+                            .withPercentageBuy(percentageBuy)
+                            .withStartMoneyAmount(this.parameters.getMoneyAmount())
+                            .withStartDigitalCurrencyAmount(this.parameters.getDigitalCurrencyAmount())
+                            .build();
 
                     runSimulation(parameters);
         })))));

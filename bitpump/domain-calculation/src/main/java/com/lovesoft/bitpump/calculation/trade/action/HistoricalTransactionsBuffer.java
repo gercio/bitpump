@@ -1,6 +1,7 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.support.MathSupport;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class HistoricalTransactionsBuffer {
     }
 
     public boolean isOverLoaded() {
-        return historicalTransactionList.size() > capacity;
+        return historicalTransactionList.size() >= capacity;
     }
 
     public List<HistoricalTransactionTO> getHistoricalTransactions() {
@@ -30,11 +31,23 @@ public class HistoricalTransactionsBuffer {
     }
 
     public void trimToHalfCapacity() {
-        int half = capacity / 2;
+        keepNumberOfLastItems(capacity / 2);
+    }
+
+    private void keepNumberOfLastItems(int countLastToKeep) {
         int size = historicalTransactionList.size();
-        if(size > half) {
-            int from = size - half ;
+        if(size > countLastToKeep) {
+            int from = size - countLastToKeep ;
             historicalTransactionList = historicalTransactionList.subList(from, size);
         }
+    }
+
+    public void trimToPercentOfCapacity(double percentage) {
+        if(historicalTransactionList.size() == 0) {
+            return;
+        }
+        Preconditions.checkArgument(percentage > 1 && percentage < 99, "Bad percentage " + percentage);
+        int countToKeep = (int) MathSupport.calculateValueOfXPercentFromY(percentage, capacity);
+        keepNumberOfLastItems(countToKeep);
     }
 }

@@ -8,14 +8,13 @@ import com.lovesoft.bitpump.calculation.trade.action.TradeActionDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.action.TrendActionDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.amount.TradeAmountDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
+import com.lovesoft.bitpump.exchange.Exchange;
+import com.lovesoft.bitpump.exchange.ExchangeBuilder;
 import com.lovesoft.bitpump.simulation.SimulationParametersTO;
 import com.lovesoft.bitpump.simulation.SimulationParametersTOBuilder;
 import com.lovesoft.bitpump.support.OptionalConsumer;
-import com.lovesoft.bitpump.to.TradeWalletTO;
-import com.lovesoft.bitpump.exchange.Exchange;
-import com.lovesoft.bitpump.exchange.ExchangeBuilder;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
-
+import com.lovesoft.bitpump.to.TradeWalletTO;
 import java.util.Optional;
 
 public class TraderFactory {
@@ -80,6 +79,7 @@ public class TraderFactory {
                                          .withTriggerTargetCountTo(getLong(parameters, TRIGGER_TARGET_COUNT_TO).intValue())
                                          .build();
             simulationActionDeciderBuilder.withParameters(simPar);
+            simulationActionDeciderBuilder.withWalletToSupplier(() -> this.tradeWallet.getTraderWalletTO());
             simulationActionDeciderBuilder.withNumberOfHistoricalTransactionsToRunSimulation(getLong(parameters, NUMBER_OF_HISTORICAL_DATA_TO_RUN_SIMULATION).intValue() );
         } else {
             throw new BadParametersException(ACTION_DECIDER_BUILDER_NAME, "Bad value " + builderName);

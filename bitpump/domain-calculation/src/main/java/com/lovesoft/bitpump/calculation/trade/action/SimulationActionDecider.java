@@ -9,8 +9,10 @@ import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAction;
+import com.lovesoft.bitpump.to.TradeWalletTO;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;
 
@@ -24,12 +26,15 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
     private Optional<ParametersTO> bestParameters = Optional.empty();
     private Optional<TradeActionDecider> tradeActionDecider = Optional.empty();
     private HistoricalTransactionsBuffer historicalTransactionsBuffer;
+    private Supplier<TradeWalletTO> tradeWalletSupplier;
 
-    protected SimulationActionDecider(SimulationParametersTO parameters,  HistoricalTransactionsBuffer historicalTransactionsBuffer) {
+    protected SimulationActionDecider(SimulationParametersTO parameters,  HistoricalTransactionsBuffer historicalTransactionsBuffer, Supplier<TradeWalletTO> tradeWalletSupplier) {
         Preconditions.checkNotNull(parameters);
         Preconditions.checkNotNull(historicalTransactionsBuffer);
+        Preconditions.checkNotNull(tradeWalletSupplier);
         this.parameters = parameters;
         this.historicalTransactionsBuffer = historicalTransactionsBuffer;
+        this.tradeWalletSupplier = tradeWalletSupplier;
     }
 
     /**
@@ -44,20 +49,31 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
     }
 
     private void runSimulation() {
-        logInfo(LOG, "Run simulation with parameters {} ", parameters);
+        logInfo(LOG, "Run simulation.");
+        TradeWalletTO to = tradeWalletSupplier.get();
+        parameters.setDigitalCurrencyAmount(to.getDigitalCurrencyAmount());
+        parameters.setMoneyAmount(to.getMoneyAmount());
+
         TraderSimulationRunner runner = new TraderSimulationRunner(() ->  historicalTransactionsBuffer.getHistoricalTransactions().stream().map(ht -> ht.getTransactionPrice()).collect(Collectors.toList()) , parameters);
         runner.setSleepTime(10);
         runner.setPrintProgreess(false);
         runner.execute();
         bestParameters = runner.getParametersForBestResult();
-        logInfo(LOG,"Found new best TrendTradeActionDecider parameters {} ", bestParameters.orElse(null));
+        printLogWithBestParameters();
 
         // Make some space for new data before run simulation again
-        historicalTransactionsBuffer.trimToHalfCapacity();
+        historicalTransactionsBuffer.trimToPercentOfCapacity(parameters.getHistoricalBufferTrimSizePercentage());
 
         // Create new
         // It could be better option to just update TradeActionDecider parameters instead of creating it from scratch every time.
         tradeActionDecider = Optional.of(new TradeActionDeciderBuilder().buildTrendTradeActionDecider().withParameters(bestParameters.get()).build());
+    }
+
+    private void printLogWithBestParameters() {
+        List<HistoricalTransactionTO> historicalTransactions = historicalTransactionsBuffer.getHistoricalTransactions();
+        HistoricalTransactionTO start = historicalTransactions.get(0);
+        HistoricalTransactionTO end = historicalTransactions.get(historicalTransactions.size() - 1);
+        logInfo(LOG,"Simulation finished. Found new best TrendTradeActionDecider parameters {} for historical parameters start {} end  {}", bestParameters.orElse(null), start.getTransactionTimeInMs(), end.getTransactionTimeInMs() );
     }
 
     @Override
@@ -67,9 +83,14 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
             logDebug(LOG, "It's time to run simulation. Historical transaction size " + historicalTransactionsBuffer.getHistoricalTransactions().size());
             runSimulation();
         }
-        return OptionalConsumerWithResult.of(tradeActionDecider, TradeAction.class)
-                                         .ifPresent(tad -> tad.calculateTradeAction(exchangeData).orElse(null))
-                                         .ifNotPresent(() -> null)
-                                         .getResult();
+
+        return OptionalConsumerWithResult.of(tradeActionDecider, TradeAction.class).ifPresent(tad -> {
+            TradeAction t = tad.calculateTradeAction(exchangeData).orElse(null);
+            logDebug( LOG,"Trader after simulation found TA {} ", t);
+            return t;
+        }).ifNotPresent(() -> {
+            logError(LOG, "!!!!!tradeActionDecider does not exist!!!!");
+            return null;
+        }).getResult();
     }
 }

@@ -6,6 +6,8 @@ public final class ParametersTOBuilder {
     private int triggerTargetBuyCount;
     private int triggerTargetSellCount;
     private double maximumLoosePercentage;
+    private double startDigitalCurrencyAmount;
+    private double startMoneyAmount;
     private HistoricalTransactionSource historicalTransactionSource;
 
     private ParametersTOBuilder() {
@@ -13,6 +15,17 @@ public final class ParametersTOBuilder {
 
     public static ParametersTOBuilder aParametersTO() {
         return new ParametersTOBuilder();
+    }
+
+
+    public ParametersTOBuilder withStartDigitalCurrencyAmount(double startDigitalCurrencyAmount) {
+        this.startDigitalCurrencyAmount = startDigitalCurrencyAmount;
+        return this;
+    }
+
+    public ParametersTOBuilder withStartMoneyAmount(double startMoneyAmount) {
+        this.startMoneyAmount = startMoneyAmount;
+        return this;
     }
 
     public ParametersTOBuilder withPercentageBuy(double percentageBuy) {

@@ -5,13 +5,13 @@ import com.lovesoft.bitpump.exchange.Exchange;
 import com.lovesoft.bitpump.support.MathSupport;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.TradeWalletTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
 
 public class TradeWalletStatistics implements WithLog {
     private double startAssetValue;
     private double lastAssetValue;
     private Exchange exchange;
+    private Optional<TradeWalletTO> lastWallet = Optional.empty();
     //private final static Logger LOG = LoggerFactory.getLogger(TradeWalletStatistics.class);
 
     public TradeWalletStatistics(Exchange exchange) {
@@ -28,14 +28,19 @@ public class TradeWalletStatistics implements WithLog {
         return exchange.calculateMoneyFromDC(walletTO.getDigitalCurrencyAmount()) + walletTO.getMoneyAmount();
     }
 
-    public void updateWalletTO(TradeWalletTO last) {
+    public synchronized void updateWalletTO(TradeWalletTO last) {
+        this.lastWallet = Optional.of(last);
         this.lastAssetValue = calculate(last);
     }
 
-    public double calculateAssetChangeInPercentage() {
+    public synchronized double calculateAssetChangeInPercentage() {
         if(startAssetValue != 0) {
             return MathSupport.calculatePercentageOfXisY(startAssetValue, lastAssetValue) - 100;
         }
         return 0;
+    }
+
+    public Optional<TradeWalletTO> getLastWallet() {
+        return lastWallet;
     }
 }

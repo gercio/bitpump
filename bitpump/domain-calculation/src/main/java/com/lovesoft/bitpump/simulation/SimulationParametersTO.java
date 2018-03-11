@@ -12,6 +12,9 @@ public class SimulationParametersTO {
     private double maximumLoosePercentageFrom ;
     private double maximumLoosePercentageTo;
     private int numberOfThreads;
+    private double historicalBufferTrimSizePercentage = 80;
+    private double digitalCurrencyAmount;
+    private double moneyAmount;
 
     public double getDoubleStep() {
         return doubleStep;
@@ -93,19 +96,35 @@ public class SimulationParametersTO {
         return numberOfThreads;
     }
 
-    @Override
-    public String toString() {
-        return "SimulationParametersTO{" +
-                "doubleStep=" + doubleStep +
-                ", percentageBuyFrom=" + percentageBuyFrom +
-                ", percentageBuyTo=" + percentageBuyTo +
-                ", percentageSelFrom=" + percentageSelFrom +
-                ", percentageSelTo=" + percentageSelTo +
-                ", triggerTargetCountFrom=" + triggerTargetCountFrom +
-                ", triggerTargetCountTo=" + triggerTargetCountTo +
-                ", maximumLoosePercentageFrom=" + maximumLoosePercentageFrom +
-                ", maximumLoosePercentageTo=" + maximumLoosePercentageTo +
-                ", numberOfThreads=" + numberOfThreads +
-                '}';
+    public double getHistoricalBufferTrimSizePercentage() {
+        return historicalBufferTrimSizePercentage;
+    }
+
+    public void setHistoricalBufferTrimSizePercentage(double historicalBufferTrimSizePercentage) {
+        this.historicalBufferTrimSizePercentage = historicalBufferTrimSizePercentage;
+    }
+
+    @Override public String toString() {
+        return "SimulationParametersTO{" + "doubleStep=" + doubleStep + ", percentageBuyFrom=" + percentageBuyFrom + ", percentageBuyTo=" + percentageBuyTo
+                + ", percentageSelFrom=" + percentageSelFrom + ", percentageSelTo=" + percentageSelTo + ", triggerTargetCountFrom=" + triggerTargetCountFrom
+                + ", triggerTargetCountTo=" + triggerTargetCountTo + ", maximumLoosePercentageFrom=" + maximumLoosePercentageFrom
+                + ", maximumLoosePercentageTo=" + maximumLoosePercentageTo + ", numberOfThreads=" + numberOfThreads + ", historicalBufferTrimSizePercentage="
+                + historicalBufferTrimSizePercentage + '}';
+    }
+
+    public void setDigitalCurrencyAmount(double digitalCurrencyAmount) {
+        this.digitalCurrencyAmount = digitalCurrencyAmount;
+    }
+
+    public double getDigitalCurrencyAmount() {
+        return digitalCurrencyAmount;
+    }
+
+    public void setMoneyAmount(double moneyAmount) {
+        this.moneyAmount = moneyAmount;
+    }
+
+    public double getMoneyAmount() {
+        return moneyAmount;
     }
 }

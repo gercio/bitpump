@@ -7,11 +7,10 @@ import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
 import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Optional;
 import java.util.function.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TraderSimulation implements Runnable, WithLog {
     private TraderFactory traderFactory;
@@ -21,6 +20,8 @@ public class TraderSimulation implements Runnable, WithLog {
     private Logger LOG = LoggerFactory.getLogger(TraderSimulation.class);
     private String parameters;
     private Optional<Consumer<TradeWalletStatistics>> statisticsConsumer = Optional.empty();
+    private boolean printSummary = false;
+    private ParametersTO parametersTo;
 
     public TraderSimulation(ParametersTO parameters) {
         this.parameters = parameters.toString();
@@ -34,6 +35,7 @@ public class TraderSimulation implements Runnable, WithLog {
                 .createDefaultTrader();
         counter = 0;
         tradeWalletStatistics = new TradeWalletStatistics(traderFactory.getExchange());
+        this.parametersTo = parameters;
     }
 
     public TraderSimulation(Parameters parameters, HistoricalTransactionSource historicalTransactionSource)  {
@@ -45,6 +47,9 @@ public class TraderSimulation implements Runnable, WithLog {
         tradeWalletStatistics = new TradeWalletStatistics(traderFactory.getExchange());
     }
 
+    public void setPrintSummary(boolean printSummary) {
+        this.printSummary = printSummary;
+    }
 
     public void setStatisticsConsumer(Consumer<TradeWalletStatistics> statisticsConsumer) {
         this.statisticsConsumer = Optional.of(statisticsConsumer);
@@ -55,10 +60,13 @@ public class TraderSimulation implements Runnable, WithLog {
         TradeWallet tradeWallet = traderFactory.getTradeWallet();
         LocalSimulationExchange exchange = (LocalSimulationExchange) traderFactory.getExchange();
 
-        // No DC
-        tradeWallet.setDigitalCurrencyAmount(0);
-        // 100 PLN
-        tradeWallet.setMoneyAmount(100);
+        if(parametersTo != null) {
+            tradeWallet.setDigitalCurrencyAmount(parametersTo.getStartDigitalCurrencyAmount());
+            tradeWallet.setMoneyAmount(parametersTo.getStartMoneyAmount());
+        } else {
+            tradeWallet.setDigitalCurrencyAmount(0);
+            tradeWallet.setMoneyAmount(100);
+        }
 
         tradeWalletStatistics.start(tradeWallet.getTraderWalletTO());
 
@@ -71,10 +79,13 @@ public class TraderSimulation implements Runnable, WithLog {
                 LOG.debug("Exchange Rate " + exchangeRate + " wallet " + tradeWallet.getTraderWalletTO());
             }
             traderFactory.getTrader().doTrades();
+            tradeWalletStatistics.updateWalletTO(tradeWallet.getTraderWalletTO());
         } );
         tradeWalletStatistics.updateWalletTO(tradeWallet.getTraderWalletTO());
         statisticsConsumer.ifPresent(c -> c.accept(tradeWalletStatistics));
-        logDebug(LOG, "Result for {} is  percentage = {}", parameters.toString(), getTradeWalletStatistics().calculateAssetChangeInPercentage() );
+        if(printSummary) {
+            logInfo(LOG, "Result for {} is  percentage = {}", parameters.toString(), getTradeWalletStatistics().calculateAssetChangeInPercentage() );
+        }
     }
 
     public TradeWalletStatistics getTradeWalletStatistics() {

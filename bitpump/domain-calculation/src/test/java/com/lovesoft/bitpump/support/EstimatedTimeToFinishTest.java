@@ -12,7 +12,7 @@ public class EstimatedTimeToFinishTest {
         EstimatedTimeToFinish timeToFinish = new EstimatedTimeToFinish(10);
         Thread.sleep(10);
         long mil = timeToFinish.getEstimatedTimeToFinish(1);
-        Assertions.assertTrue(80 < mil && mil < 100, " Bad value " + mil + " it should be around 90 milliseconds");
+        Assertions.assertTrue(20 < mil && mil < 500, " Bad value " + mil + " it should be around 90 milliseconds");
     }
 
     @Test public void testGetEstimatedTimeOfFinish() throws InterruptedException {

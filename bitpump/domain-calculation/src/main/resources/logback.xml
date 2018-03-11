@@ -9,7 +9,7 @@
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>objat.log</file>
         <append>false</append>
-        <immediateFlush>false</immediateFlush>
+        <immediateFlush>true</immediateFlush>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>

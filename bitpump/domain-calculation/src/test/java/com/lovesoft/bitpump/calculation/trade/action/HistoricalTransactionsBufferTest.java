@@ -45,6 +45,14 @@ public class HistoricalTransactionsBufferTest {
         Assertions.assertEquals(historicalTransactionList.subList(3,5), htList);
     }
 
+    @Test
+    public void testTrimToPercentOfCapacity() {
+        HistoricalTransactionsBuffer buffer = create(5);
+        buffer.trimToPercentOfCapacity(80);
+        List<HistoricalTransactionTO> htList = buffer.getHistoricalTransactions();
+        Assertions.assertEquals(historicalTransactionList.subList(1,5), htList);
+    }
+
     private HistoricalTransactionsBuffer create(int capacity) {
         HistoricalTransactionsBuffer buffer = new HistoricalTransactionsBuffer(capacity);
         ExchangeDataTOBuilder builder = new ExchangeDataTOBuilder();

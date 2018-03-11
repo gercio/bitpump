@@ -1,5 +1,6 @@
 package com.lovesoft.bitpump.simulation;
 
+import java.text.DecimalFormat;
 
 public class ParametersTO {
     private double percentageBuy;
@@ -7,6 +8,8 @@ public class ParametersTO {
     private int triggerTargetBuyCount;
     private int triggerTargetSellCount;
     private double maximumLoosePercentage;
+    private double startDigitalCurrencyAmount = 0;
+    private double startMoneyAmount = 100;
     private HistoricalTransactionSource historicalTransactionSource;
 
     public double getPercentageBuy() {
@@ -57,6 +60,22 @@ public class ParametersTO {
         this.triggerTargetSellCount = triggerTargetSellCount;
     }
 
+    public double getStartDigitalCurrencyAmount() {
+        return startDigitalCurrencyAmount;
+    }
+
+    public void setStartDigitalCurrencyAmount(double startDigitalCurrencyAmount) {
+        this.startDigitalCurrencyAmount = startDigitalCurrencyAmount;
+    }
+
+    public double getStartMoneyAmount() {
+        return startMoneyAmount;
+    }
+
+    public void setStartMoneyAmount(double startMoneyAmount) {
+        this.startMoneyAmount = startMoneyAmount;
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -96,7 +115,13 @@ public class ParametersTO {
     }
 
     @Override public String toString() {
-        return "ParametersTO{" + "percentageBuy=" + percentageBuy + ", percentageSel=" + percentageSel + ", triggerTargetBuyCount=" + triggerTargetBuyCount
-                + ", triggerTargetSellCount=" + triggerTargetSellCount + ", maximumLoosePercentage=" + maximumLoosePercentage  + '}';
+        DecimalFormat formatterShort = new DecimalFormat("00.0");
+        return String.format("ParametersTO{percentageBuy=" + format(formatterShort, percentageBuy) +", percentageSel=" + format(formatterShort, percentageSel) + ", triggerTargetBuyCount=%02d"
+                + ", triggerTargetSellCount=%02d, maximumLoosePercentage=" + format(formatterShort, maximumLoosePercentage) +", startDigitalCurrencyAmount =  " + startDigitalCurrencyAmount + ", startMoneyAmount = " + startMoneyAmount +" }'", triggerTargetBuyCount
+        , triggerTargetSellCount);
+    }
+
+    private String format(DecimalFormat formatter, double percentageBuy) {
+        return formatter.format(percentageBuy).replace(",", ".");
     }
 }

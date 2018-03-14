@@ -3,6 +3,7 @@ package com.lovesoft.bitpump.calculation.trade;
 import com.lovesoft.bitpump.ExchangeDataTOBuilder;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
+import com.lovesoft.bitpump.test.TestSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +22,8 @@ public class TraderTest {
     }
 
     private void createTrader(Double maximumLoosePercentage) {
-        TraderFactory traderFactory = new TraderFactory();
-        Optional.ofNullable(maximumLoosePercentage).ifPresent( p -> traderFactory.withMaximumLoosePercentage(p));
+        TraderFactory traderFactory = TestSupport.createDefaultTraderFactory();
+        Optional.ofNullable(maximumLoosePercentage).ifPresent( p -> traderFactory.withStopLoosPercentage(p));
         trader = traderFactory.createDefaultTrader();
         exchange = (LocalSimulationExchange) traderFactory.getExchange();
         tradeWallet = trader.getActualWallet();

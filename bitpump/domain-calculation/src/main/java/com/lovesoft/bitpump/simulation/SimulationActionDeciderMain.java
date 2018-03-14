@@ -1,7 +1,6 @@
 package com.lovesoft.bitpump.simulation;
 
-import com.lovesoft.bitpump.calculation.Parameters;
-import com.lovesoft.bitpump.calculation.trade.TraderFactory;
+import com.lovesoft.bitpump.calculation.trade.action.SimulationActionDeciderParameters;
 import com.lovesoft.bitpump.simulation.SimulationDataSupport.ChartName;
 import com.lovesoft.bitpump.support.WithLog;
 import org.slf4j.Logger;
@@ -17,22 +16,32 @@ public class SimulationActionDeciderMain implements WithLog{
 
     public void run() {
 
-        Parameters parameters = new Parameters();
+        ParametersTO parameters = new ParametersTO();
+        parameters.setHistoricalTransactionSource(history);
+        parameters.setMaximumLoosePercentage(3);
+        parameters.setStartMoneyAmount(100);
+        parameters.setStartDigitalCurrencyAmount(0);
+        SimulationActionDeciderParameters param = new SimulationActionDeciderParameters();
+        param.setNumberOfHistoricalTransactionsToRunSimulation(3000);
 
-        parameters.put(TraderFactory.ACTION_DECIDER_BUILDER_NAME, TraderFactory.SIMULATION_ACTION_DECIDER);
-        parameters.put(TraderFactory.NUMBER_OF_THREADS, 4);
-        parameters.put(TraderFactory.MAXIMUM_LOOSE_PERCENTAGE_FROM, 3);
-        parameters.put(TraderFactory.MAXIMUM_LOOSE_PERCENTAGE_TO, 12);
-        parameters.put(TraderFactory.DOUBLE_STEP, 0.1);
-        parameters.put(TraderFactory.PERCENTAGE_BUY_FROM, 0.1);
-        parameters.put(TraderFactory.PERCENTAGE_SEL_FROM, 0.1);
-        parameters.put(TraderFactory.PERCENTAGE_BUY_TO, 0.3);
-        parameters.put(TraderFactory.PERCENTAGE_SEL_TO, 0.3);
-        parameters.put(TraderFactory.TRIGGER_TARGET_COUNT_FROM, 1);
-        parameters.put(TraderFactory.TRIGGER_TARGET_COUNT_TO, 20);
-        parameters.put(TraderFactory.NUMBER_OF_HISTORICAL_DATA_TO_RUN_SIMULATION, 3000);
+        SimulationParametersTO simParam = new SimulationParametersTO();
+        simParam.setDoubleStep(0.1);
+        simParam.setMaximumLoosePercentageFrom(3);
+        simParam.setMaximumLoosePercentageTo(12);
+        simParam.setNumberOfThreads(4);
+        simParam.setPercentageBuyFrom(0.1);
+        simParam.setPercentageBuyTo(0.3);
+        simParam.setPercentageSelFrom(0.1);
+        simParam.setPercentageSelTo(0.3);
+        simParam.setTriggerTargetCountFrom(1);
+        simParam.setMaximumLoosePercentageTo(20);
+        simParam.setHistoricalBufferTrimSizePercentage(80);
 
-        simulation = new TraderSimulation(parameters, history);
+        param.setParameters(simParam);
+        parameters.setTrendParameters(param);
+
+        simulation = new TraderSimulation(parameters);
+        param.setWalletToSupplier(simulation.getWalletTOSupplier());
         simulation.setPrintSummary(true);
         history.setChartName(ChartName.Bitmarket24_05);
         Thread t = new Thread(simulation);

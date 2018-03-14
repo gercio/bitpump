@@ -15,7 +15,11 @@ public class TrendTradeActionDeciderTest {
 
     @BeforeEach
     void beforeEach() {
-        trendTradeActionDecider = new TradeActionDeciderBuilder().buildTrendTradeActionDecider().withPercentage(5).withMaximumHistoricalTransactions(10).build();
+
+        TrendTradeActionDeciderParameters par = new TrendTradeActionDeciderParameters();
+        par.setPercentageDownSell(5);
+        par.setPercentageUpBuy(5);
+        trendTradeActionDecider = new TradeActionDeciderBuilder().build(par);
     }
 
     @Test

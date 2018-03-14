@@ -1,6 +1,6 @@
 package com.lovesoft.bitpump.simulation;
 
-import com.lovesoft.bitpump.calculation.Parameters;
+import com.lovesoft.bitpump.calculation.trade.action.TrendTradeActionDeciderParameters;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
 import com.lovesoft.bitpump.simulation.SimulationDataSupport.ChartName;
 import org.junit.jupiter.api.Assertions;
@@ -17,18 +17,21 @@ public class TraderSimulationTest {
     }
 
     private void initializeTest(double percentageBuy, double percentageSel, int triggerTargetCount, double maximumLoosePercentage) {
-        ParametersTO parametersTO = ParametersTOBuilder.aParametersTO()
-                .withPercentageBuy(percentageBuy)
-                .withPercentageSel(percentageSel)
-                .withTriggerTargetBuyCount(triggerTargetCount)
-                .withTriggerTargetSellCount(triggerTargetCount)
-                .withMaximumLoosePercentage(maximumLoosePercentage)
-                .withHistoricalTransactionSource(history).build();
-        simulation = new TraderSimulation(parametersTO);
-    }
+        TrendTradeActionDeciderParameters tad = new TrendTradeActionDeciderParameters();
+        tad.setPercentageUpBuy(percentageBuy);
+        tad.setPercentageDownSell(percentageSel);
+        tad.setTriggerTargetBuyCount(triggerTargetCount);
+        tad.setTriggerTargetSellCount(triggerTargetCount);
 
-    private void initializeTest(Parameters parameters) {
-        simulation = new TraderSimulation(parameters, history);
+        ParametersTO parametersTO = ParametersTOBuilder.aParametersTO()
+                .withTradeActionDeciderParameters(tad)
+                .withMaximumLoosePercentage(maximumLoosePercentage)
+                .withHistoricalTransactionSource(history)
+                .withStartDigitalCurrencyAmount(0)
+                .withStartMoneyAmount(100)
+                .build();
+
+        simulation = new TraderSimulation(parametersTO);
     }
 
     @Test

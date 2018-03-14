@@ -1,39 +1,24 @@
 package com.lovesoft.bitpump.simulation;
 
-import java.text.DecimalFormat;
+import com.lovesoft.bitpump.calculation.trade.action.TradeActionParameters;
 
 public class ParametersTO {
-    private double percentageBuy;
-    private double percentageSel;
-    private int triggerTargetBuyCount;
-    private int triggerTargetSellCount;
+    private TradeActionParameters trendParameters;
     private double maximumLoosePercentage;
-    private double startDigitalCurrencyAmount = 0;
-    private double startMoneyAmount = 100;
+    private double startDigitalCurrencyAmount;
+    private double startMoneyAmount;
     private HistoricalTransactionSource historicalTransactionSource;
 
-    public double getPercentageBuy() {
-        return percentageBuy;
+    public ParametersTO() {
+
     }
 
-    public void setPercentageBuy(double percentageBuy) {
-        this.percentageBuy = percentageBuy;
+    public TradeActionParameters getTrendParameters() {
+        return trendParameters;
     }
 
-    public double getPercentageSel() {
-        return percentageSel;
-    }
-
-    public void setPercentageSel(double percentageSel) {
-        this.percentageSel = percentageSel;
-    }
-
-    public int getTriggerTargetBuyCount() {
-        return triggerTargetBuyCount;
-    }
-
-    public void setTriggerTargetBuyCount(int triggerTargetBuyCount) {
-        this.triggerTargetBuyCount = triggerTargetBuyCount;
+    public void setTrendParameters(TradeActionParameters trendParameters) {
+        this.trendParameters = trendParameters;
     }
 
     public double getMaximumLoosePercentage() {
@@ -50,14 +35,6 @@ public class ParametersTO {
 
     public void setHistoricalTransactionSource(HistoricalTransactionSource historicalTransactionSource) {
         this.historicalTransactionSource = historicalTransactionSource;
-    }
-
-    public int getTriggerTargetSellCount() {
-        return triggerTargetSellCount;
-    }
-
-    public void setTriggerTargetSellCount(int triggerTargetSellCount) {
-        this.triggerTargetSellCount = triggerTargetSellCount;
     }
 
     public double getStartDigitalCurrencyAmount() {
@@ -81,16 +58,8 @@ public class ParametersTO {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-
         ParametersTO that = (ParametersTO) o;
-
-        if (Double.compare(that.percentageBuy, percentageBuy) != 0)
-            return false;
-        if (Double.compare(that.percentageSel, percentageSel) != 0)
-            return false;
-        if (triggerTargetBuyCount != that.triggerTargetBuyCount)
-            return false;
-        if (triggerTargetSellCount != that.triggerTargetSellCount)
+        if (!that.trendParameters.equals(trendParameters))
             return false;
         if (Double.compare(that.maximumLoosePercentage, maximumLoosePercentage) != 0)
             return false;
@@ -100,28 +69,34 @@ public class ParametersTO {
     }
 
     @Override public int hashCode() {
-        int result;
+        int result = 13;
         long temp;
-        temp = Double.doubleToLongBits(percentageBuy);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(percentageSel);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + triggerTargetBuyCount;
-        result = 31 * result + triggerTargetSellCount;
         temp = Double.doubleToLongBits(maximumLoosePercentage);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (historicalTransactionSource != null ? historicalTransactionSource.hashCode() : 0);
+        result = 31 * result + trendParameters.hashCode();
         return result;
     }
 
-    @Override public String toString() {
-        DecimalFormat formatterShort = new DecimalFormat("00.0");
-        return String.format("ParametersTO{percentageBuy=" + format(formatterShort, percentageBuy) +", percentageSel=" + format(formatterShort, percentageSel) + ", triggerTargetBuyCount=%02d"
-                + ", triggerTargetSellCount=%02d, maximumLoosePercentage=" + format(formatterShort, maximumLoosePercentage) +", startDigitalCurrencyAmount =  " + startDigitalCurrencyAmount + ", startMoneyAmount = " + startMoneyAmount +" }'", triggerTargetBuyCount
-        , triggerTargetSellCount);
+//    @Override public String toString() {
+//        DecimalFormat formatterShort = new DecimalFormat("00.0");
+//        return String.format("ParametersTO{percentageBuy=" + format(formatterShort, trendParameters.getPercentageUpBuy()) +", percentageSel=" + format(formatterShort, trendParameters.getPercentageDownSell()) + ", triggerTargetBuyCount=%02d"
+//                + ", triggerTargetSellCount=%02d, maximumLoosePercentage=" + format(formatterShort, maximumLoosePercentage) +", startDigitalCurrencyAmount =  " + startDigitalCurrencyAmount + ", startMoneyAmount = " + startMoneyAmount +" }'", trendParameters.getTriggerTargetBuyCount()
+//        , trendParameters.getTriggerTargetSellCount());
+//    }
+
+    @Override
+    public String toString() {
+        return "ParametersTO{" +
+                "trendParameters=" + trendParameters +
+                ", maximumLoosePercentage=" + maximumLoosePercentage +
+                ", startDigitalCurrencyAmount=" + startDigitalCurrencyAmount +
+                ", startMoneyAmount=" + startMoneyAmount +
+                ", historicalTransactionSource=" + historicalTransactionSource +
+                '}';
     }
 
-    private String format(DecimalFormat formatter, double percentageBuy) {
-        return formatter.format(percentageBuy).replace(",", ".");
-    }
+//    private String format(DecimalFormat formatter, double percentageBuy) {
+//        return formatter.format(percentageBuy).replace(",", ".");
+//    }
 }

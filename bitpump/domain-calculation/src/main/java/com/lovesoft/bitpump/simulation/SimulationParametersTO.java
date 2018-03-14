@@ -12,7 +12,7 @@ public class SimulationParametersTO {
     private double maximumLoosePercentageFrom ;
     private double maximumLoosePercentageTo;
     private int numberOfThreads;
-    private double historicalBufferTrimSizePercentage = 80;
+    private double historicalBufferTrimSizePercentage;
     private double digitalCurrencyAmount;
     private double moneyAmount;
 

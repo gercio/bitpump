@@ -1,7 +1,6 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.google.common.base.Preconditions;
-import com.lovesoft.bitpump.simulation.ParametersTO;
 import com.lovesoft.bitpump.simulation.SimulationParametersTO;
 import com.lovesoft.bitpump.simulation.TraderSimulationRunner;
 import com.lovesoft.bitpump.support.OptionalConsumerWithResult;
@@ -10,11 +9,12 @@ import com.lovesoft.bitpump.to.ExchangeDataTO;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAction;
 import com.lovesoft.bitpump.to.TradeWalletTO;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.slf4j.LoggerFactory;
 
 /**
  * Use simulation calculation for historical data to find best parameters to run TrendTradeActionDecider.
@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 public class SimulationActionDecider implements TradeActionDecider, WithLog {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SimulationActionDecider.class);
+    private Optional<TrendTradeActionDeciderParameters> bestParameters = Optional.empty();
     private SimulationParametersTO parameters;
-    private Optional<ParametersTO> bestParameters = Optional.empty();
     private Optional<TradeActionDecider> tradeActionDecider = Optional.empty();
     private HistoricalTransactionsBuffer historicalTransactionsBuffer;
     private Supplier<TradeWalletTO> tradeWalletSupplier;
@@ -66,7 +66,7 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
 
         // Create new
         // It could be better option to just update TradeActionDecider parameters instead of creating it from scratch every time.
-        tradeActionDecider = Optional.of(new TradeActionDeciderBuilder().buildTrendTradeActionDecider().withParameters(bestParameters.get()).build());
+        tradeActionDecider = new TrendActionDeciderBuilder().build(bestParameters.get());
     }
 
     private void printLogWithBestParameters() {

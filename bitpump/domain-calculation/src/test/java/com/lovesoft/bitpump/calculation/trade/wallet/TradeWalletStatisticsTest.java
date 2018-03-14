@@ -1,11 +1,12 @@
 package com.lovesoft.bitpump.calculation.trade.wallet;
 
 import com.lovesoft.bitpump.calculation.trade.TraderFactory;
+import com.lovesoft.bitpump.test.TestSupport;
 import com.lovesoft.bitpump.to.TradeWalletTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TradeWalletStatisticsTest {
 
@@ -13,7 +14,7 @@ class TradeWalletStatisticsTest {
 
     @BeforeEach
     public void beforeEach() {
-        TraderFactory tf = new TraderFactory();
+        TraderFactory tf = TestSupport.createDefaultTraderFactory();
         tf.createDefaultTrader();
         tradeWalletStatistics = new TradeWalletStatistics(tf.getExchange());
     }

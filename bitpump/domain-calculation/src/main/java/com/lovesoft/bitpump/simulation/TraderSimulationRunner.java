@@ -1,15 +1,18 @@
 package com.lovesoft.bitpump.simulation;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.calculation.trade.action.TrendTradeActionDeciderParameters;
 import com.lovesoft.bitpump.support.EstimatedTimeToFinish;
+import com.lovesoft.bitpump.support.OptionalConsumerWithResult;
 import com.lovesoft.bitpump.support.WithLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TraderSimulationRunner implements WithLog {
     private final static Logger LOG = LoggerFactory.getLogger(TraderSimulationRunner.class);
@@ -41,11 +44,14 @@ public class TraderSimulationRunner implements WithLog {
         logInfo(LOG, "Starting Cosmic Simulation... Please wait a while, I am calculating fast for you (: ");
         runSimulation();
         waitForSimulationToFinish();
-        bestResultFinder.getResults();
+        bestResultFinder.getResults(); //TODO why to call this?
     }
 
-    public Optional<ParametersTO> getParametersForBestResult() {
-        return bestResultFinder.getBestResult();
+    public Optional<TrendTradeActionDeciderParameters> getParametersForBestResult() {
+        return OptionalConsumerWithResult.of(bestResultFinder.getBestResult(),TrendTradeActionDeciderParameters.class )
+                .ifNotPresent(() -> null)
+                .ifPresent(p -> (TrendTradeActionDeciderParameters) p.getTrendParameters())
+                .getResult();
     }
 
     private void runSimulation() {
@@ -56,12 +62,15 @@ public class TraderSimulationRunner implements WithLog {
                 .forEach(triggerTargetBuyCount -> getMaximumLooseStream()
                 .forEach(maximumLoosPercentage -> {
 
+                    TrendTradeActionDeciderParameters param = new TrendTradeActionDeciderParameters();
+                    param.setTriggerTargetSellCount(triggerTargetSellCount);
+                    param.setTriggerTargetBuyCount(triggerTargetBuyCount);
+                    param.setPercentageDownSell(percentageSell);
+                    param.setPercentageUpBuy(percentageBuy);
+
                     ParametersTO parameters = ParametersTOBuilder.aParametersTO().withHistoricalTransactionSource(historical)
                             .withMaximumLoosePercentage(maximumLoosPercentage)
-                            .withTriggerTargetSellCount(triggerTargetSellCount)
-                            .withTriggerTargetBuyCount(triggerTargetBuyCount)
-                            .withPercentageSel(percentageSell)
-                            .withPercentageBuy(percentageBuy)
+                            .withTradeActionDeciderParameters(param)
                             .withStartMoneyAmount(this.parameters.getMoneyAmount())
                             .withStartDigitalCurrencyAmount(this.parameters.getDigitalCurrencyAmount())
                             .build();

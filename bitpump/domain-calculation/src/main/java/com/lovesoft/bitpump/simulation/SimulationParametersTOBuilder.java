@@ -11,6 +11,7 @@ public final class SimulationParametersTOBuilder {
     private double maximumLoosePercentageFrom ;
     private double maximumLoosePercentageTo;
     private int numberOfThreads;
+    private double historicalBufferTrimSizePercentage;
 
     private SimulationParametersTOBuilder() {
     }
@@ -19,10 +20,16 @@ public final class SimulationParametersTOBuilder {
         return new SimulationParametersTOBuilder();
     }
 
+
+    public SimulationParametersTOBuilder withHistoricalBufferTrimSizePercentage(double historicalBufferTrimSizePercentage) {
+        this.historicalBufferTrimSizePercentage = historicalBufferTrimSizePercentage;
+        return this;
+    }
     public SimulationParametersTOBuilder withDoubleStep(double doubleStep) {
         this.doubleStep = doubleStep;
         return this;
     }
+
 
     public SimulationParametersTOBuilder withPercentageBuyFrom(double percentageBuyFrom) {
         this.percentageBuyFrom = percentageBuyFrom;
@@ -81,6 +88,7 @@ public final class SimulationParametersTOBuilder {
         simulationParametersTO.setMaximumLoosePercentageFrom(maximumLoosePercentageFrom);
         simulationParametersTO.setMaximumLoosePercentageTo(maximumLoosePercentageTo);
         simulationParametersTO.setNumberOfThreads(numberOfThreads);
+        simulationParametersTO.setHistoricalBufferTrimSizePercentage(historicalBufferTrimSizePercentage);
         return simulationParametersTO;
     }
 }

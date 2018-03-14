@@ -2,7 +2,9 @@ package com.lovesoft.bitpump.calculation.trade.wallet;
 
 import com.lovesoft.bitpump.to.TradeWalletTO;
 
-public class TradeWallet {
+import java.util.function.Supplier;
+
+public class TradeWallet implements Supplier<TradeWalletTO> {
     private double moneyAmount;
     private double digitalCurrencyAmount;
 
@@ -47,5 +49,10 @@ public class TradeWallet {
 
     public void addDigitalCurrency(double digitalCurrencyAmount) {
         this.digitalCurrencyAmount += digitalCurrencyAmount;
+    }
+
+    @Override
+    public TradeWalletTO get() {
+        return getTraderWalletTO();
     }
 }

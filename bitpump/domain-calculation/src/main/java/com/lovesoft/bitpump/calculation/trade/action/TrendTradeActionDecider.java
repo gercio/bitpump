@@ -38,10 +38,6 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
         logDebug(LOG, "percentageUpBuy = {}", percentageUpBuy);
     }
 
-    public void setTriggerTargetCount(int targetCount) {
-        this.trigger.setTargetCount(targetCount);
-    }
-
     public void setTargetBuyCount(int targetBuyCount) {
         trigger.setTargetBuyCount(targetBuyCount);
     }

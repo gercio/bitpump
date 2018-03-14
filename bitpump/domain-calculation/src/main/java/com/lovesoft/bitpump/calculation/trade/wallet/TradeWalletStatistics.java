@@ -5,6 +5,7 @@ import com.lovesoft.bitpump.exchange.Exchange;
 import com.lovesoft.bitpump.support.MathSupport;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.TradeWalletTO;
+
 import java.util.Optional;
 
 public class TradeWalletStatistics implements WithLog {
@@ -15,6 +16,7 @@ public class TradeWalletStatistics implements WithLog {
     //private final static Logger LOG = LoggerFactory.getLogger(TradeWalletStatistics.class);
 
     public TradeWalletStatistics(Exchange exchange) {
+        Preconditions.checkNotNull(exchange);
         this.exchange = exchange;
     }
 

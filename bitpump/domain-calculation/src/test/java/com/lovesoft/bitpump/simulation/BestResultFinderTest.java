@@ -27,7 +27,7 @@ public class BestResultFinderTest {
     private void findBestResult(BestResultFinder finder, double percentage, double percentageBuy) {
         TradeWalletStatistics mockStatistics = mock(TradeWalletStatistics.class);
         when(mockStatistics.calculateAssetChangeInPercentage()).thenReturn(percentage);
-        ParametersTO parameters = ParametersTOBuilder.aParametersTO().withPercentageBuy(percentageBuy).build();
+        ParametersTO parameters = ParametersTOBuilder.aParametersTO().withMaximumLoosePercentage(percentageBuy).build();
         finder.findBestResult(mockStatistics, parameters);
     }
 }

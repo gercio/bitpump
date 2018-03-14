@@ -1,37 +1,19 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
-import com.lovesoft.bitpump.simulation.SimulationParametersTO;
-import com.lovesoft.bitpump.to.TradeWalletTO;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 /**
  * Created 25.02.2018 19:45.
  */
-public class SimulationActionDeciderBuilder {
-
-    private SimulationParametersTO parameters;
-    private int numberOfHistoricalTransactionsToRunSimulation;
-    private Supplier<TradeWalletTO> walletToSupplier;
-
-    protected SimulationActionDeciderBuilder() {
+public class SimulationActionDeciderBuilder extends TradeActionBuilder<SimulationActionDeciderParameters> {
+    @Override
+    protected Optional<TradeActionDecider> buildFromParameters(SimulationActionDeciderParameters parameters) {
+        return Optional.of(new SimulationActionDecider(parameters.getParameters(),
+                new HistoricalTransactionsBuffer(parameters.getNumberOfHistoricalTransactionsToRunSimulation()), parameters.getWalletToSupplier()));
     }
 
-    public SimulationActionDeciderBuilder withParameters(SimulationParametersTO parameters) {
-        this.parameters = parameters;
-        return this;
-    }
-
-    public SimulationActionDeciderBuilder withWalletToSupplier(Supplier<TradeWalletTO> walletToSupplier) {
-        this.walletToSupplier = walletToSupplier;
-        return this;
-    }
-
-    public SimulationActionDeciderBuilder withNumberOfHistoricalTransactionsToRunSimulation(int numberOfHistoricalTransactionsToRunSimulation) {
-        this.numberOfHistoricalTransactionsToRunSimulation = numberOfHistoricalTransactionsToRunSimulation;
-        return this;
-    }
-
-    public SimulationActionDecider build() {
-        return new SimulationActionDecider(parameters, new HistoricalTransactionsBuffer(numberOfHistoricalTransactionsToRunSimulation), walletToSupplier);
+    @Override
+    protected Class<SimulationActionDeciderParameters> getTradeActionParametersClass() {
+        return SimulationActionDeciderParameters.class;
     }
 }

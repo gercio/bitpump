@@ -1,16 +1,18 @@
 package com.lovesoft.bitpump.simulation;
 
-import com.lovesoft.bitpump.calculation.Parameters;
 import com.lovesoft.bitpump.calculation.trade.TraderFactory;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
 import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
-import java.util.Optional;
-import java.util.function.Consumer;
+import com.lovesoft.bitpump.to.TradeWalletTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class TraderSimulation implements Runnable, WithLog {
     private TraderFactory traderFactory;
@@ -27,24 +29,21 @@ public class TraderSimulation implements Runnable, WithLog {
         this.parameters = parameters.toString();
         historicalTransactionSource = parameters.getHistoricalTransactionSource();
         traderFactory = new TraderFactory();
-        traderFactory.withMaximumHistoricalTransactions(10000).withPercentageUpBuy(parameters.getPercentageBuy())
-                .withPercentageDownSell(parameters.getPercentageSel())
-                .withTriggerTargetBuyCount(parameters.getTriggerTargetBuyCount())
-                .withTriggerTargetSellCount(parameters.getTriggerTargetSellCount())
-                .withMaximumLoosePercentage(parameters.getMaximumLoosePercentage())
+        traderFactory.withParameters(parameters.getTrendParameters())
+                .withStopLoosPercentage(parameters.getMaximumLoosePercentage())
                 .createDefaultTrader();
+//        traderFactory.withMaximumHistoricalTransactions(10000).withPercentageUpBuy(parameters.getPercentageBuy())
+//                .withPercentageDownSell(parameters.getPercentageSel())
+//                .withTriggerTargetBuyCount(parameters.getTriggerTargetBuyCount())
+//                .withTriggerTargetSellCount(parameters.getTriggerTargetSellCount())
+//                .withMaximumLoosePercentage(parameters.getMaximumLoosePercentage())
+//                .createDefaultTrader();
+
         counter = 0;
+        traderFactory.getTradeWallet().addDigitalCurrency(parameters.getStartDigitalCurrencyAmount());
+        traderFactory.getTradeWallet().addMoneyAmount(parameters.getStartMoneyAmount());
         tradeWalletStatistics = new TradeWalletStatistics(traderFactory.getExchange());
         this.parametersTo = parameters;
-    }
-
-    public TraderSimulation(Parameters parameters, HistoricalTransactionSource historicalTransactionSource)  {
-        this.parameters = parameters.toString();
-        this.historicalTransactionSource =  historicalTransactionSource;
-        traderFactory = new TraderFactory();
-        traderFactory.withParameters(parameters).createDefaultTrader();
-        counter = 0;
-        tradeWalletStatistics = new TradeWalletStatistics(traderFactory.getExchange());
     }
 
     public void setPrintSummary(boolean printSummary) {
@@ -90,5 +89,9 @@ public class TraderSimulation implements Runnable, WithLog {
 
     public TradeWalletStatistics getTradeWalletStatistics() {
         return tradeWalletStatistics;
+    }
+
+    public Supplier<TradeWalletTO> getWalletTOSupplier() {
+        return traderFactory.getTradeWallet();
     }
 }

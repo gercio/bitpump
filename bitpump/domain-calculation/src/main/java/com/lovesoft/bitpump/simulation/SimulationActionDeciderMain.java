@@ -40,10 +40,10 @@ public class SimulationActionDeciderMain implements WithLog{
         param.setParameters(simParam);
         parameters.setTrendParameters(param);
 
+        history.setChartName(ChartName.Bitmarket24_05);
         simulation = new TraderSimulation(parameters);
         param.setWalletToSupplier(simulation.getWalletTOSupplier());
         simulation.setPrintSummary(true);
-        history.setChartName(ChartName.Bitmarket24_05);
         Thread t = new Thread(simulation);
         t.start();
 

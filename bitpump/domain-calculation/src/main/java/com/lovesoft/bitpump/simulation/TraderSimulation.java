@@ -32,12 +32,6 @@ public class TraderSimulation implements Runnable, WithLog {
         traderFactory.withParameters(parameters.getTrendParameters())
                 .withStopLoosPercentage(parameters.getMaximumLoosePercentage())
                 .createDefaultTrader();
-//        traderFactory.withMaximumHistoricalTransactions(10000).withPercentageUpBuy(parameters.getPercentageBuy())
-//                .withPercentageDownSell(parameters.getPercentageSel())
-//                .withTriggerTargetBuyCount(parameters.getTriggerTargetBuyCount())
-//                .withTriggerTargetSellCount(parameters.getTriggerTargetSellCount())
-//                .withMaximumLoosePercentage(parameters.getMaximumLoosePercentage())
-//                .createDefaultTrader();
 
         counter = 0;
         traderFactory.getTradeWallet().addDigitalCurrency(parameters.getStartDigitalCurrencyAmount());

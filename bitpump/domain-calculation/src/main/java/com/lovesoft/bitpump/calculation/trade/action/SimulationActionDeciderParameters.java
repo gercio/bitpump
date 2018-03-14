@@ -5,7 +5,7 @@ import com.lovesoft.bitpump.to.TradeWalletTO;
 
 import java.util.function.Supplier;
 
-public class SimulationActionDeciderParameters implements TradeActionParameters {
+public class SimulationActionDeciderParameters implements TradeActionParameters, WalletToSupplierObserver {
     private SimulationParametersTO parameters;
     private int numberOfHistoricalTransactionsToRunSimulation;
     private Supplier<TradeWalletTO> walletToSupplier;
@@ -32,5 +32,12 @@ public class SimulationActionDeciderParameters implements TradeActionParameters 
 
     public void setWalletToSupplier(Supplier<TradeWalletTO> walletToSupplier) {
         this.walletToSupplier = walletToSupplier;
+    }
+
+    @Override
+    public void observerNewWalletToSupplier(Supplier<TradeWalletTO> walletToSupplier) {
+        if(getWalletToSupplier() == null) {
+            setWalletToSupplier(walletToSupplier);
+        }
     }
 }

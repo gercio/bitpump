@@ -12,6 +12,8 @@ public final class SimulationParametersTOBuilder {
     private double maximumLoosePercentageTo;
     private int numberOfThreads;
     private double historicalBufferTrimSizePercentage;
+    private double moneyAmount;
+    private double digitalCurrencyAmount;
 
     private SimulationParametersTOBuilder() {
     }
@@ -25,11 +27,21 @@ public final class SimulationParametersTOBuilder {
         this.historicalBufferTrimSizePercentage = historicalBufferTrimSizePercentage;
         return this;
     }
+
+    public SimulationParametersTOBuilder withMoneyAmount(double moneyAmount) {
+        this.moneyAmount = moneyAmount;
+        return this;
+    }
+
+    public SimulationParametersTOBuilder withDigitalCurrencyAmount(double digitalCurrencyAmount) {
+        this.digitalCurrencyAmount = digitalCurrencyAmount;
+        return this;
+    }
+
     public SimulationParametersTOBuilder withDoubleStep(double doubleStep) {
         this.doubleStep = doubleStep;
         return this;
     }
-
 
     public SimulationParametersTOBuilder withPercentageBuyFrom(double percentageBuyFrom) {
         this.percentageBuyFrom = percentageBuyFrom;
@@ -89,6 +101,8 @@ public final class SimulationParametersTOBuilder {
         simulationParametersTO.setMaximumLoosePercentageTo(maximumLoosePercentageTo);
         simulationParametersTO.setNumberOfThreads(numberOfThreads);
         simulationParametersTO.setHistoricalBufferTrimSizePercentage(historicalBufferTrimSizePercentage);
+        simulationParametersTO.setMoneyAmount(moneyAmount);
+        simulationParametersTO.setDigitalCurrencyAmount(digitalCurrencyAmount);
         return simulationParametersTO;
     }
 }

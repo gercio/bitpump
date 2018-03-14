@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionDecider;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionParameters;
+import com.lovesoft.bitpump.calculation.trade.action.WalletToSupplierObserver;
 import com.lovesoft.bitpump.calculation.trade.amount.TradeAmountDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.exchange.Exchange;
@@ -40,44 +41,12 @@ public class TraderFactory {
         return this;
     }
 
-//    public TraderFactory withParameters(TradeActionParameters parameters) {
-//        simulationActionDeciderBuilder = null;
-//        String builderName = parameters.getOptional(ACTION_DECIDER_BUILDER_NAME)
-//                                       .orElseThrow(() ->  new BadParametersException(ACTION_DECIDER_BUILDER_NAME, "Missing value"));
-//        if(TREND_ACTION_DECIDER.equals(builderName)) {
-//            withMaximumHistoricalTransactions(getLong(parameters, MAXIMUM_HISTORICAL_TRANSACTIONS));
-//            withMaximumLoosePercentage(getDouble(parameters, MAXIMUM_LOOS_PERCENTAGE));
-//            withPercentageDownSell(getDouble(parameters, PERCENTAGE_DOWN_SELL));
-//            withPercentageUpBuy(getDouble(parameters, PERCENTAGE_UP_BUY));
-//            withTriggerTargetBuyCount(getLong(parameters, TRIGGER_TRADE_BUY_COUNT).intValue());
-//            withTriggerTargetSellCount(getLong(parameters, TRIGGER_TARGET_SELL_COUNT).intValue());
-//        } else if(SIMULATION_ACTION_DECIDER.equals(builderName)) {
-//            simulationActionDeciderBuilder = new TradeActionDeciderBuilder().buildSimulationActionDecider();
-//            SimulationParametersTO simPar = SimulationParametersTOBuilder.aSimulationParametersTO().withNumberOfThreads(getLong(parameters, NUMBER_OF_THREADS).intValue())
-//                                         .withDoubleStep(getDouble(parameters, DOUBLE_STEP))
-//                                         .withMaximumLoosePercentageFrom(getDouble(parameters, MAXIMUM_LOOSE_PERCENTAGE_FROM))
-//                                         .withMaximumLoosePercentageTo(getDouble(parameters, MAXIMUM_LOOSE_PERCENTAGE_TO))
-//                                         .withPercentageBuyFrom(getDouble(parameters, PERCENTAGE_BUY_FROM))
-//                                         .withPercentageSelFrom(getDouble(parameters, PERCENTAGE_SEL_FROM))
-//                                         .withPercentageBuyTo(getDouble(parameters, PERCENTAGE_BUY_TO))
-//                                         .withPercentageSelTo(getDouble(parameters, PERCENTAGE_SEL_TO))
-//                                         .withTriggerTargetCountFrom(getLong(parameters, TRIGGER_TARGET_COUNT_FROM).intValue())
-//                                         .withTriggerTargetCountTo(getLong(parameters, TRIGGER_TARGET_COUNT_TO).intValue())
-//                                         .build();
-//            simulationActionDeciderBuilder.withParameters(simPar);
-//            simulationActionDeciderBuilder.withWalletToSupplier(() -> this.tradeWallet.getTraderWalletTO());
-//            simulationActionDeciderBuilder.withNumberOfHistoricalTransactionsToRunSimulation(getLong(parameters, NUMBER_OF_HISTORICAL_DATA_TO_RUN_SIMULATION).intValue() );
-//        } else {
-//            throw new BadParametersException(ACTION_DECIDER_BUILDER_NAME, "Bad value " + builderName);
-//        }
-//
-//        return this;
-//    }
-
-
     public Trader createDefaultTrader() {
         Preconditions.checkNotNull(parameters, "Parameters are null, please set them.");
         tradeWallet = new TradeWallet( new TradeWalletTO(0,0));
+        if(parameters instanceof WalletToSupplierObserver) {
+            ((WalletToSupplierObserver) parameters).observerNewWalletToSupplier(tradeWallet);
+        }
         exchange = new ExchangeBuilder().withExchangeData( new ExchangeDataTO()).withTradeWallet(tradeWallet).build();
         tradeActionDecider = tradeActionDeciderBuilder.build(parameters);
         TraderBuilder traderBuilder = new TraderBuilder().withExchange(exchange)

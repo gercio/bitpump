@@ -20,6 +20,8 @@ public class TraderSimulationRunnerTest {
                 .withTriggerTargetCountFrom(1)
                 .withTriggerTargetCountTo(2)
                 .withNumberOfThreads(1)
+                .withMoneyAmount(100)
+                .withDigitalCurrencyAmount(1)
                 .build();
 
         TraderSimulationRunner simulationRunner = new TraderSimulationRunner(history, parameters);

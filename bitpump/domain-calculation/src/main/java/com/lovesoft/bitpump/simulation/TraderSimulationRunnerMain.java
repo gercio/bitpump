@@ -12,7 +12,7 @@ public class TraderSimulationRunnerMain {
 
     public static SimulationParametersTO getParameters() {
         return SimulationParametersTOBuilder.aSimulationParametersTO()
-                .withDoubleStep(0.01)
+                .withDoubleStep(0.1)
                 .withPercentageBuyFrom(2.1)
                 .withPercentageBuyTo(2.3)
                 .withPercentageSelFrom(0.6)
@@ -22,6 +22,8 @@ public class TraderSimulationRunnerMain {
                 .withMaximumLoosePercentageFrom(4)
                 .withMaximumLoosePercentageTo(7)
                 .withNumberOfThreads(5)
+                .withMoneyAmount(100)
+                .withDigitalCurrencyAmount(0)
                 .build();
     }
 }

@@ -26,6 +26,7 @@ public class TraderSimulationRunner implements WithLog {
 
     public TraderSimulationRunner(HistoricalTransactionSource historical, SimulationParametersTO parameters) {
         Preconditions.checkArgument(parameters.getNumberOfThreads() > 0, "To low thread number " + parameters.getNumberOfThreads() );
+        Preconditions.checkArgument(parameters.getTriggerTargetCountTo() > parameters.getTriggerTargetCountFrom(), "TriggerTargetCountTo " + parameters.getTriggerTargetCountTo() +  " is smaller thanTriggerTargetCountFrom " + parameters.getTriggerTargetCountFrom());
         this.executor = new ScheduledThreadPoolExecutor(parameters.getNumberOfThreads());
         this.historical = historical;
         this.parameters = parameters;

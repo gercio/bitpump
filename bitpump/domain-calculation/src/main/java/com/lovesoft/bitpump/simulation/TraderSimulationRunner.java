@@ -3,7 +3,6 @@ package com.lovesoft.bitpump.simulation;
 import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.calculation.trade.action.TrendTradeActionDeciderParameters;
 import com.lovesoft.bitpump.support.EstimatedTimeToFinish;
-import com.lovesoft.bitpump.support.OptionalConsumerWithResult;
 import com.lovesoft.bitpump.support.WithLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ public class TraderSimulationRunner implements WithLog {
         this.executor = new ScheduledThreadPoolExecutor(parameters.getNumberOfThreads());
         this.historical = historical;
         this.parameters = parameters;
-        logInfo(LOG, "Using Simulation Parameters -> {}", this.parameters);
+        logDebug(LOG, "Using Simulation Parameters -> {}", this.parameters);
     }
 
     public void setSleepTime(long sleepTime) {
@@ -45,14 +44,14 @@ public class TraderSimulationRunner implements WithLog {
         logInfo(LOG, "Starting Cosmic Simulation... Please wait a while, I am calculating fast for you (: ");
         runSimulation();
         waitForSimulationToFinish();
-        bestResultFinder.getResults(); //TODO why to call this?
     }
 
-    public Optional<TrendTradeActionDeciderParameters> getParametersForBestResult() {
-        return OptionalConsumerWithResult.of(bestResultFinder.getBestResult(),TrendTradeActionDeciderParameters.class )
-                .ifNotPresent(() -> null)
-                .ifPresent(p -> (TrendTradeActionDeciderParameters) p.getTrendParameters())
-                .getResult();
+    public Optional<ParametersTO> getParametersForBestResult() {
+        return bestResultFinder.getBestResult();
+    }
+
+    public Optional<Double> getPercentageForBestResult() {
+        return bestResultFinder.getActualBestResult();
     }
 
     private void runSimulation() {

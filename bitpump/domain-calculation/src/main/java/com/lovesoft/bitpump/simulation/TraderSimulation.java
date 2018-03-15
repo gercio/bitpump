@@ -61,11 +61,15 @@ public class TraderSimulation implements Runnable, WithLog {
             tradeWallet.setMoneyAmount(100);
         }
 
-        tradeWalletStatistics.start(tradeWallet.getTraderWalletTO());
-
         historicalTransactionSource.getHistoricalTransactions().forEach(exchangeRate -> {
+
             // Simulate that something new trade came up
             exchange.keepOnlyThisHistoricalTransaction(new HistoricalTransactionTO(counter++, exchangeRate));
+
+            // Update statistics
+            if(counter <= 1) {
+                tradeWalletStatistics.start(tradeWallet.getTraderWalletTO());
+            }
 
             // Do trading!
             if(LOG.isDebugEnabled()) {

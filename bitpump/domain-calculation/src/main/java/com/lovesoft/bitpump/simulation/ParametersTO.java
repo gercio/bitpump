@@ -78,13 +78,6 @@ public class ParametersTO {
         return result;
     }
 
-//    @Override public String toString() {
-//        DecimalFormat formatterShort = new DecimalFormat("00.0");
-//        return String.format("ParametersTO{percentageBuy=" + format(formatterShort, trendParameters.getPercentageUpBuy()) +", percentageSel=" + format(formatterShort, trendParameters.getPercentageDownSell()) + ", triggerTargetBuyCount=%02d"
-//                + ", triggerTargetSellCount=%02d, maximumLoosePercentage=" + format(formatterShort, maximumLoosePercentage) +", startDigitalCurrencyAmount =  " + startDigitalCurrencyAmount + ", startMoneyAmount = " + startMoneyAmount +" }'", trendParameters.getTriggerTargetBuyCount()
-//        , trendParameters.getTriggerTargetSellCount());
-//    }
-
     @Override
     public String toString() {
         return "ParametersTO{" +
@@ -92,11 +85,7 @@ public class ParametersTO {
                 ", maximumLoosePercentage=" + maximumLoosePercentage +
                 ", startDigitalCurrencyAmount=" + startDigitalCurrencyAmount +
                 ", startMoneyAmount=" + startMoneyAmount +
-                ", historicalTransactionSource=" + historicalTransactionSource +
                 '}';
     }
 
-//    private String format(DecimalFormat formatter, double percentageBuy) {
-//        return formatter.format(percentageBuy).replace(",", ".");
-//    }
 }

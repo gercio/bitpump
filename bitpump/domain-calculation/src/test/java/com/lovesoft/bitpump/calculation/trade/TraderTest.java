@@ -61,6 +61,7 @@ public class TraderTest {
     @Test
     public void shouldNotTradeBecauseNoMoney() {
         tradeWallet.setMoneyAmount(0); // No money = no trade
+        exchange.keepOnlyThisHistoricalTransaction(new ExchangeDataTOBuilder().createHistoricalTransactions(10d));
 
         // test
         trader.doTrades();

@@ -56,4 +56,14 @@ public class TrendTradeActionDeciderParameters implements  TradeActionParameters
 
         return Objects.hash(percentageUpBuy, percentageDownSell, triggerTargetBuyCount, triggerTargetSellCount);
     }
+
+    @Override
+    public String toString() {
+        return "TrendTradeActionDeciderParameters{" +
+                "percentageUpBuy=" + percentageUpBuy +
+                ", percentageDownSell=" + percentageDownSell +
+                ", triggerTargetBuyCount=" + triggerTargetBuyCount +
+                ", triggerTargetSellCount=" + triggerTargetSellCount +
+                '}';
+    }
 }

@@ -74,7 +74,9 @@ public class LocalSimulationExchange implements Exchange, WithLog {
     private double calculateExchangeRate() {
         List<HistoricalTransactionTO> htList = historicalTransactions;
         if(htList.isEmpty()) {
-            return this.DEFAULT_EXCHANGE_RATE;
+            throw new BitPumpRuntimeException("Can't calculate exchange rate. Historical transaction list is empty!");
+
+//            return this.DEFAULT_EXCHANGE_RATE;
         }
 
         // Treat last historical price like current exchange rate

@@ -18,25 +18,24 @@ public class SimulationActionDeciderMain implements WithLog{
 
         ParametersTO parameters = new ParametersTO();
         parameters.setHistoricalTransactionSource(history);
-        parameters.setMaximumLoosePercentage(3);
-        parameters.setStartMoneyAmount(100);
+        parameters.setMaximumLoosePercentage(5);
+        parameters.setStartMoneyAmount(1000);
         parameters.setStartDigitalCurrencyAmount(0);
         SimulationActionDeciderParameters param = new SimulationActionDeciderParameters();
-        param.setNumberOfHistoricalTransactionsToRunSimulation(3000);
+        param.setNumberOfHistoricalTransactionsToRunSimulation(1000);
 
         SimulationParametersTO simParam = new SimulationParametersTO();
-        simParam.setDoubleStep(0.1);
-        simParam.setMaximumLoosePercentageFrom(3);
-        simParam.setMaximumLoosePercentageTo(12);
-        simParam.setNumberOfThreads(3);
+        simParam.setDoubleStep(0.5);
         simParam.setPercentageBuyFrom(0.1);
-        simParam.setPercentageBuyTo(0.3);
+        simParam.setPercentageBuyTo(4.1);
         simParam.setPercentageSelFrom(0.1);
-        simParam.setPercentageSelTo(0.3);
+        simParam.setPercentageSelTo(4.1);
+        simParam.setMaximumLoosePercentageFrom(9);
+        simParam.setMaximumLoosePercentageTo(15);
+        simParam.setNumberOfThreads(4);
         simParam.setTriggerTargetCountFrom(1);
-        simParam.setTriggerTargetCountTo(10);
-        simParam.setMaximumLoosePercentageTo(20);
-        simParam.setHistoricalBufferTrimSizePercentage(80);
+        simParam.setTriggerTargetCountTo(12);
+        simParam.setHistoricalBufferTrimSizePercentage(90);
 
         param.setParameters(simParam);
         parameters.setTrendParameters(param);

@@ -1,6 +1,8 @@
 package com.lovesoft.bitpump.calculation.trade.wallet;
 
+import com.lovesoft.bitpump.ExchangeDataTOBuilder;
 import com.lovesoft.bitpump.calculation.trade.TraderFactory;
+import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
 import com.lovesoft.bitpump.test.TestSupport;
 import com.lovesoft.bitpump.to.TradeWalletTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,7 @@ class TradeWalletStatisticsTest {
         TraderFactory tf = TestSupport.createDefaultTraderFactory();
         tf.createDefaultTrader();
         tradeWalletStatistics = new TradeWalletStatistics(tf.getExchange());
+        ((LocalSimulationExchange) tf.getExchange()).keepOnlyThisHistoricalTransaction(new ExchangeDataTOBuilder().createHistoricalTransactions(100d));
     }
 
     @Test

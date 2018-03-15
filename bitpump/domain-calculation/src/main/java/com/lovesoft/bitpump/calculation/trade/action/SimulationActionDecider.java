@@ -1,6 +1,7 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.simulation.ParametersTO;
 import com.lovesoft.bitpump.simulation.SimulationParametersTO;
 import com.lovesoft.bitpump.simulation.TraderSimulationRunner;
 import com.lovesoft.bitpump.support.OptionalConsumerWithResult;
@@ -22,7 +23,9 @@ import java.util.stream.Collectors;
 public class SimulationActionDecider implements TradeActionDecider, WithLog {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(SimulationActionDecider.class);
-    private Optional<TrendTradeActionDeciderParameters> bestParameters = Optional.empty();
+    private Optional<ParametersTO> bestParameters = Optional.empty();
+    private Optional<Double> bestPercentage = Optional.empty();
+
     private SimulationParametersTO parameters;
     private Optional<TradeActionDecider> tradeActionDecider = Optional.empty();
     private HistoricalTransactionsBuffer historicalTransactionsBuffer;
@@ -59,6 +62,8 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
         runner.setPrintProgreess(false);
         runner.execute();
         bestParameters = runner.getParametersForBestResult();
+        bestPercentage = runner.getPercentageForBestResult();
+
         printLogWithBestParameters();
 
         // Make some space for new data before run simulation again
@@ -66,14 +71,14 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
 
         // Create new
         // It could be better option to just update TradeActionDecider parameters instead of creating it from scratch every time.
-        tradeActionDecider = new TrendActionDeciderBuilder().build(bestParameters.get());
+        tradeActionDecider = new TrendActionDeciderBuilder().build((TrendTradeActionDeciderParameters) bestParameters.get().getTrendParameters());
     }
 
     private void printLogWithBestParameters() {
         List<HistoricalTransactionTO> historicalTransactions = historicalTransactionsBuffer.getHistoricalTransactions();
         HistoricalTransactionTO start = historicalTransactions.get(0);
         HistoricalTransactionTO end = historicalTransactions.get(historicalTransactions.size() - 1);
-        logInfo(LOG,"Simulation finished. Found new best TrendTradeActionDecider parameters {} for historical parameters start {} end  {}", bestParameters.orElse(null), start.getTransactionTimeInMs(), end.getTransactionTimeInMs() );
+        logInfo(LOG,"Simulation finished. Found new best TrendTradeActionDecider parameters {} with simulated earnings {} for historical parameters start {} end  {}", bestParameters.orElse(null), bestPercentage.orElse(null), start.getTransactionTimeInMs(), end.getTransactionTimeInMs() );
     }
 
     @Override
@@ -89,7 +94,7 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
             logDebug( LOG,"Trader after simulation found TA {} ", t);
             return t;
         }).ifNotPresent(() -> {
-            logError(LOG, "!!!!!tradeActionDecider does not exist!!!!");
+            logWarn(LOG, "TradeActionDecider does not exist yet!");
             return null;
         }).getResult();
     }

@@ -17,28 +17,30 @@ public class SimulationActionDeciderMain implements WithLog{
     public void run() {
 
         ParametersTO parameters = new ParametersTO();
+//        parameters.setHistoricalTransactionSource( new MAVHistoricalTransactionSource(10,history));
         parameters.setHistoricalTransactionSource(history);
         parameters.setMaximumLoosePercentage(5);
         parameters.setStartMoneyAmount(1000);
         parameters.setStartDigitalCurrencyAmount(0);
         SimulationActionDeciderParameters param = new SimulationActionDeciderParameters();
-        param.setNumberOfHistoricalTransactionsToRunSimulation(1000);
+        param.setNumberOfHistoricalTransactionsToRunSimulation(300);
 
         SimulationParametersTO simParam = new SimulationParametersTO();
-        simParam.setDoubleStep(0.5);
+        simParam.setDoubleStep(1);
         simParam.setPercentageBuyFrom(0.1);
-        simParam.setPercentageBuyTo(4.1);
+        simParam.setPercentageBuyTo(5.1);
         simParam.setPercentageSelFrom(0.1);
-        simParam.setPercentageSelTo(4.1);
-        simParam.setMaximumLoosePercentageFrom(9);
+        simParam.setPercentageSelTo(5.1);
+        simParam.setMaximumLoosePercentageFrom(10);
         simParam.setMaximumLoosePercentageTo(15);
-        simParam.setNumberOfThreads(4);
+        simParam.setNumberOfThreads(3);
         simParam.setTriggerTargetCountFrom(1);
-        simParam.setTriggerTargetCountTo(12);
-        simParam.setHistoricalBufferTrimSizePercentage(90);
+        simParam.setTriggerTargetCountTo(22);
+        simParam.setHistoricalBufferTrimSizePercentage(55);
 
         param.setParameters(simParam);
         parameters.setTrendParameters(param);
+        logInfo(LOG, "Starting with parameters {} ", parameters);
 
         history.setChartName(ChartName.Bitmarket24_05);
         simulation = new TraderSimulation(parameters);

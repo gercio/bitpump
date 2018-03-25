@@ -26,9 +26,7 @@ public class TraderFactory {
     private Optional<Double> stopLoosPercentageOptional = Optional.empty();
 
     public TraderFactory() {
-        // default values
-//        tradeActionDeciderBuilder.withPercentage(5);
-//        tradeActionDeciderBuilder.withMaximumHistoricalTransactions(5);
+
     }
 
     public TraderFactory withParameters(TradeActionParameters parameters) {

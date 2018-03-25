@@ -7,6 +7,6 @@ import com.lovesoft.bitpump.to.TradeWalletTO;
 public interface Exchange {
     ExchangeDataTO getExchangeData();
     TradeWalletTO doTradeAction(TradeAmountTO amount);
-    double calculateMoneyFromDC(double digitalCurrencyAmount);
-    double calculateDCFromMoney(double moneyAmount);
+    double calculateMoneyFromDC(double digitalCurrencyAmount); // ask
+    double calculateDCFromMoney(double moneyAmount); // bid
 }

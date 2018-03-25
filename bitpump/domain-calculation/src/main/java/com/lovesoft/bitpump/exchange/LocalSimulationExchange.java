@@ -24,7 +24,6 @@ public class LocalSimulationExchange implements Exchange, WithLog {
     private static Logger LOG = LoggerFactory.getLogger(LocalSimulationExchange.class);
     private List<HistoricalTransactionTO> historicalTransactions;
     private TradeWallet tradeWallet;
-    private final double DEFAULT_EXCHANGE_RATE = 100;
 
     protected LocalSimulationExchange(ExchangeDataTO exchangeData, TradeWallet tradeWallet) {
         Preconditions.checkNotNull(exchangeData);
@@ -75,8 +74,6 @@ public class LocalSimulationExchange implements Exchange, WithLog {
         List<HistoricalTransactionTO> htList = historicalTransactions;
         if(htList.isEmpty()) {
             throw new BitPumpRuntimeException("Can't calculate exchange rate. Historical transaction list is empty!");
-
-//            return this.DEFAULT_EXCHANGE_RATE;
         }
 
         // Treat last historical price like current exchange rate
@@ -84,6 +81,7 @@ public class LocalSimulationExchange implements Exchange, WithLog {
     }
 
     public void keepOnlyThisHistoricalTransaction(Collection<HistoricalTransactionTO> historicalTransactions) {
+        this.historicalTransactions.clear();
         this.historicalTransactions.addAll( historicalTransactions);
     }
 

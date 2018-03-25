@@ -40,4 +40,12 @@ public class SimulationActionDeciderParameters implements TradeActionParameters,
             setWalletToSupplier(walletToSupplier);
         }
     }
+
+    @Override
+    public String toString() {
+        return "SimulationActionDeciderParameters{" +
+                "parameters=" + parameters +
+                ", numberOfHistoricalTransactionsToRunSimulation=" + numberOfHistoricalTransactionsToRunSimulation +
+                '}';
+    }
 }

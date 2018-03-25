@@ -29,10 +29,14 @@ public class BestResultFinder implements WithLog {
         MAX_RESULTS = maximumResults;
     }
 
-    public void findBestResult(TradeWalletStatistics st, ParametersTO simulationParameters) {
+    public synchronized void findBestResult(TradeWalletStatistics st, ParametersTO simulationParameters) {
         final double percentage = st.calculateAssetChangeInPercentage();
         if(!sortedResult.isEmpty() && sortedResult.lastKey() < percentage) {
             logDebug(LOG, "New best result  {} %  for parameters {}", percentage, simulationParameters);
+            bestResultPercentage.set(percentage);
+            bestParameters.set(simulationParameters);
+        }
+        if(sortedResult.isEmpty()) {
             bestResultPercentage.set(percentage);
             bestParameters.set(simulationParameters);
         }
@@ -54,9 +58,6 @@ public class BestResultFinder implements WithLog {
         return Optional.ofNullable(bestParameters.get());
     }
 
-    public void printResultsToLog() {
-        logInfo(LOG, getResults());
-    }
 
     public String getResults() {
         return  OptionalConsumerWithResult.of(getBestResult(), String.class).ifPresent(p -> "--> Found best result for parameters " + p).ifNotPresent( () -> "No result").getResult().get();

@@ -9,10 +9,11 @@ import org.junit.jupiter.api.Test;
 
 public class TraderSimulationTest {
     private TraderSimulation simulation;
-    private SimulationHistoricalTransaction history = new SimulationHistoricalTransaction();
+    private SimulationHistoricalTransaction history;
 
     @BeforeEach
     public void beforeEach() {
+        history = new SimulationHistoricalTransaction();
         initializeTest(1, 1, 1, 90);
     }
 
@@ -99,6 +100,16 @@ public class TraderSimulationTest {
         doTrade(ChartName.Bitmarket24_04);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 11, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
+
+//    @Test
+//    public void testBitmarket24_05() {
+//        // New best result  11.184704952107936 %  for parameters ParametersTO{percentageBuy=2.2, percentageSel=0.7, triggerTargetCount=4, maximumLoosePercentage=5.0}
+//        initializeTest(2.2, 0.7, 4, 5.0);
+//
+//        history = new HistoricalTransactionSourceLimit(history, 8900);
+//        doTrade(ChartName.Bitmarket24_04, 0, 9000);
+//        Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 1, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
+//    }
 
 
 

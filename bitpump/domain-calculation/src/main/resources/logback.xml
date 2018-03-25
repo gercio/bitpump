@@ -23,6 +23,17 @@
         <appender-ref ref="FILE" />
     </logger>
 
+    <logger name="com.lovesoft.bitpump.simulation.BestResultFinder" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.lovesoft.bitpump.calculation.trade.action.SimulationActionDecider" level="info" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+
+
+
     <!--<logger name="com.lovesoft.bitpumpmp.calculation.trade.action.TraderSimulationTest" level="INFO" additivity="false">-->
         <!--<appender-ref ref="FILE" />-->
     <!--</logger>-->

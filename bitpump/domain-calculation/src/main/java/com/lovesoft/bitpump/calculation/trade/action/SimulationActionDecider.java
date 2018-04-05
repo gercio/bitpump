@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Use simulation calculation for historical data to find best parameters to run TrendTradeActionDecider.
@@ -57,9 +56,9 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
         parameters.setDigitalCurrencyAmount(to.getDigitalCurrencyAmount());
         parameters.setMoneyAmount(to.getMoneyAmount());
 
-        TraderSimulationRunner runner = new TraderSimulationRunner(() ->  historicalTransactionsBuffer.getHistoricalTransactions().stream().map(ht -> ht.getTransactionPrice()).collect(Collectors.toList()) , parameters);
+        TraderSimulationRunner runner = new TraderSimulationRunner(new HistoricalSourceFromHT(historicalTransactionsBuffer.getHistoricalTransactionsTO()), parameters);
         runner.setSleepTime(10);
-        runner.setPrintProgreess(false);
+        runner.setPrintProgress(false);
         runner.execute();
         bestParameters = runner.getParametersForBestResult();
         bestPercentage = runner.getPercentageForBestResult();
@@ -75,7 +74,7 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
     }
 
     private void printLogWithBestParameters() {
-        List<HistoricalTransactionTO> historicalTransactions = historicalTransactionsBuffer.getHistoricalTransactions();
+        List<HistoricalTransactionTO> historicalTransactions = historicalTransactionsBuffer.getHistoricalTransactionsTO();
         HistoricalTransactionTO start = historicalTransactions.get(0);
         HistoricalTransactionTO end = historicalTransactions.get(historicalTransactions.size() - 1);
         logInfo(LOG,"Simulation finished. Found new best TrendTradeActionDecider parameters {} with simulated earnings {} for historical parameters start {} end  {}", bestParameters.orElse(null), bestPercentage.orElse(null), start.getTransactionTimeInMs(), end.getTransactionTimeInMs() );
@@ -85,7 +84,7 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
     public Optional<TradeAction> calculateTradeAction(ExchangeDataTO exchangeData) {
         historicalTransactionsBuffer.keep(exchangeData.getHistoricalTransactions());
         if(historicalTransactionsBuffer.isOverLoaded()) {
-            logDebug(LOG, "It's time to run simulation. Historical transaction size " + historicalTransactionsBuffer.getHistoricalTransactions().size());
+            logDebug(LOG, "It's time to run simulation. Historical transaction size " + historicalTransactionsBuffer.getHistoricalTransactionsTO().size());
             runSimulation();
         }
 

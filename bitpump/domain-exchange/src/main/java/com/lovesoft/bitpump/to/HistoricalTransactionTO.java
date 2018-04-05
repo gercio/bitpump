@@ -1,14 +1,22 @@
 package com.lovesoft.bitpump.to;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class HistoricalTransactionTO implements Comparable<HistoricalTransactionTO> {
     private long transactionTimeInMs;
     private double transactionPrice;
+    private Optional<Double> transactionPriceMVA = Optional.empty();
 
     public HistoricalTransactionTO(long transactionTimeInMs, double transactionPrice) {
         this.transactionTimeInMs = transactionTimeInMs;
         this.transactionPrice = transactionPrice;
+    }
+
+    public HistoricalTransactionTO(long transactionTimeInMs, double transactionPrice, double transactionPriceMVA) {
+        this.transactionTimeInMs = transactionTimeInMs;
+        this.transactionPrice = transactionPrice;
+        this.transactionPriceMVA = Optional.of(transactionPriceMVA);
     }
 
     public double getTransactionPrice() {
@@ -35,5 +43,9 @@ public class HistoricalTransactionTO implements Comparable<HistoricalTransaction
     @Override
     public int hashCode() {
         return Objects.hash(transactionTimeInMs);
+    }
+
+    public Optional<Double> getTransactionPriceMVA() {
+        return transactionPriceMVA;
     }
 }

@@ -15,10 +15,18 @@ public class HistoricalTransactionSourceLimit implements HistoricalTransactionSo
 
     @Override
     public List<Double> getHistoricalTransactions() {
-        List<Double> history = source.getHistoricalTransactions();
+        return getWithLimit(source.getHistoricalTransactions());
+    }
+
+    private List<Double> getWithLimit(List<Double> history) {
         if(history.size() > limitToFirstElements) {
             return history.subList(0, limitToFirstElements);
         }
         return history;
+    }
+
+    @Override
+    public List<Double> getHistoricalTransactionsMVA() {
+        return getWithLimit(source.getHistoricalTransactionsMVA());
     }
 }

@@ -1,15 +1,18 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.simulation.HistoricalTransactionSource;
 import com.lovesoft.bitpump.support.MathSupport;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created 25.02.2018 12:44.
  */
-public class HistoricalTransactionsBuffer {
+public class HistoricalTransactionsBuffer implements HistoricalTransactionSource {
     private int capacity;
     private List<HistoricalTransactionTO> historicalTransactionList = new ArrayList<>();
 
@@ -26,7 +29,7 @@ public class HistoricalTransactionsBuffer {
         return historicalTransactionList.size() >= capacity;
     }
 
-    public List<HistoricalTransactionTO> getHistoricalTransactions() {
+    public List<HistoricalTransactionTO> getHistoricalTransactionsTO() {
         return historicalTransactionList;
     }
 
@@ -49,5 +52,15 @@ public class HistoricalTransactionsBuffer {
         Preconditions.checkArgument(percentage > 1 && percentage < 99, "Bad percentage " + percentage);
         int countToKeep = (int) MathSupport.calculateValueOfXPercentFromY(percentage, capacity);
         keepNumberOfLastItems(countToKeep);
+    }
+
+    @Override
+    public List<Double> getHistoricalTransactions() {
+        return historicalTransactionList.stream().map( to -> to.getTransactionPrice()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Double> getHistoricalTransactionsMVA() {
+        return historicalTransactionList.stream().filter(to -> to.getTransactionPriceMVA().isPresent()).map( to -> to.getTransactionPriceMVA().get()).collect(Collectors.toList());
     }
 }

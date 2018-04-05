@@ -1,14 +1,14 @@
 package com.lovesoft.bitpump.calculation.trade;
 
-import com.lovesoft.bitpump.support.OptionalConsumerBoolean;
-import com.lovesoft.bitpump.to.TradeAction;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionDecider;
 import com.lovesoft.bitpump.calculation.trade.amount.TradeAmountDecider;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
-import com.lovesoft.bitpump.to.TradeWalletTO;
 import com.lovesoft.bitpump.exchange.Exchange;
-import com.lovesoft.bitpump.to.ExchangeDataTO;
+import com.lovesoft.bitpump.support.OptionalConsumerBoolean;
 import com.lovesoft.bitpump.support.WithLog;
+import com.lovesoft.bitpump.to.ExchangeDataTO;
+import com.lovesoft.bitpump.to.TradeAction;
+import com.lovesoft.bitpump.to.TradeWalletTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +68,7 @@ public class SimpleTrader implements Trader, WithLog {
     private void letsTrade(TradeAction ta, ExchangeDataTO exchangeData) {
         tradeData.setSellExchangeRate(exchangeData.getSellExchangeRate());
         if(tradeData.getLastAction().isPresent() && tradeData.getLastAction().get().equals(ta)) {
-            logDebug(LOG, "Can't do " + ta + " right now (this was last action)");
+            logDebug(LOG, "Can't do {} right now (this was last action)", ta);
             return;
         }
         tradeAmountDecider.setTradeWallet(tradeWallet.getTraderWalletTO());

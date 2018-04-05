@@ -4,4 +4,5 @@ import java.util.List;
 
 public interface HistoricalTransactionSource {
     List<Double> getHistoricalTransactions();
+    List<Double> getHistoricalTransactionsMVA();
 }

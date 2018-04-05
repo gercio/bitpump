@@ -1,16 +1,16 @@
 package com.lovesoft.bitpump.support;
 
+import com.lovesoft.bitpump.test.SimpleHistoricalTransactionSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class HistoricalTransactionSourceLimitTest {
 
     @Test
     public void testIt() {
-        HistoricalTransactionSourceLimit limit = new HistoricalTransactionSourceLimit(() -> Arrays.asList(1.0, 2.0, 3.0, 4.0), 2);
+        HistoricalTransactionSourceLimit limit = new HistoricalTransactionSourceLimit(SimpleHistoricalTransactionSource.build(1.0, 2.0, 3.0, 4.0), 2);
 
         List<Double> list =  limit.getHistoricalTransactions();
 

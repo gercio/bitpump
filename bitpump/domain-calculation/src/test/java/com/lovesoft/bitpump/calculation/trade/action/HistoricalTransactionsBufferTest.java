@@ -2,10 +2,11 @@ package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.lovesoft.bitpump.ExchangeDataTOBuilder;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 /**
  * Created 25.02.2018 12:44.
@@ -33,7 +34,7 @@ public class HistoricalTransactionsBufferTest {
     @Test
     public void testGetHistoricalTransactions() {
         HistoricalTransactionsBuffer buffer = create(100);
-        List<HistoricalTransactionTO> htList = buffer.getHistoricalTransactions();
+        List<HistoricalTransactionTO> htList = buffer.getHistoricalTransactionsTO();
         Assertions.assertEquals(historicalTransactionList, htList);
     }
 
@@ -41,7 +42,7 @@ public class HistoricalTransactionsBufferTest {
     public void testTrim() {
         HistoricalTransactionsBuffer buffer = create(4);
         buffer.trimToHalfCapacity();
-        List<HistoricalTransactionTO> htList = buffer.getHistoricalTransactions();
+        List<HistoricalTransactionTO> htList = buffer.getHistoricalTransactionsTO();
         Assertions.assertEquals(historicalTransactionList.subList(3,5), htList);
     }
 
@@ -49,7 +50,7 @@ public class HistoricalTransactionsBufferTest {
     public void testTrimToPercentOfCapacity() {
         HistoricalTransactionsBuffer buffer = create(5);
         buffer.trimToPercentOfCapacity(80);
-        List<HistoricalTransactionTO> htList = buffer.getHistoricalTransactions();
+        List<HistoricalTransactionTO> htList = buffer.getHistoricalTransactionsTO();
         Assertions.assertEquals(historicalTransactionList.subList(1,5), htList);
     }
 

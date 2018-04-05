@@ -21,7 +21,7 @@ public class TraderSimulationRunner implements WithLog {
     private BestResultFinder bestResultFinder = new BestResultFinder();
     private EstimatedTimeToFinish timeToFinish;
     private long sleepTime = 2000;
-    private boolean printProgreess = true;
+    private boolean printProgress = true;
 
     public TraderSimulationRunner(HistoricalTransactionSource historical, SimulationParametersTO parameters) {
         Preconditions.checkArgument(parameters.getNumberOfThreads() > 0, "To low thread number " + parameters.getNumberOfThreads() );
@@ -36,8 +36,8 @@ public class TraderSimulationRunner implements WithLog {
         this.sleepTime = sleepTime;
     }
 
-    public void setPrintProgreess(boolean printProgreess) {
-        this.printProgreess = printProgreess;
+    public void setPrintProgress(boolean printProgress) {
+        this.printProgress = printProgress;
     }
 
     public void execute() {
@@ -97,7 +97,7 @@ public class TraderSimulationRunner implements WithLog {
     }
 
     private void printProgress() {
-        if(printProgreess) {
+        if(printProgress) {
             StringBuilder sb = new StringBuilder();
             sb.append("Progress " + executor.getCompletedTaskCount() + " / " + executor.getTaskCount());
             sb.append("\t Time to finish [" + timeToFinish.printEstimatedTimeToFinish(executor.getCompletedTaskCount()) + "] ");

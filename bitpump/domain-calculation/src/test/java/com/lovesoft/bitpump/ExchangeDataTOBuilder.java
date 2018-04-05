@@ -1,7 +1,7 @@
 package com.lovesoft.bitpump;
 
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
+import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class ExchangeDataTOBuilder {
     public List<HistoricalTransactionTO> createHistoricalTransactions(Double ... historicalTrades) {
         List<HistoricalTransactionTO> list = new ArrayList<>();
         for(double trade :  Arrays.asList(historicalTrades) ) {
-            list.add( new HistoricalTransactionTO(counter++, trade));
+            list.add( new HistoricalTransactionTO(counter++, trade, trade));
         }
         return list;
     }

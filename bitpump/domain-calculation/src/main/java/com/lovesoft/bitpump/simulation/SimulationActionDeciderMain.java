@@ -11,32 +11,34 @@ import org.slf4j.LoggerFactory;
  */
 public class SimulationActionDeciderMain implements WithLog{
     private TraderSimulation simulation;
-    private SimulationHistoricalTransaction history = new SimulationHistoricalTransaction();
+    private SimulationHistoricalTransaction history = new SimulationHistoricalTransaction(20);
     private static final Logger LOG = LoggerFactory.getLogger(SimulationActionDeciderMain.class);
 
     public void run() {
 
         ParametersTO parameters = new ParametersTO();
-//        parameters.setHistoricalTransactionSource( new MAVHistoricalTransactionSource(10,history));
         parameters.setHistoricalTransactionSource(history);
         parameters.setMaximumLoosePercentage(5);
-        parameters.setStartMoneyAmount(1000);
-        parameters.setStartDigitalCurrencyAmount(0);
+        parameters.setStartMoneyAmount(0);
+        parameters.setStartDigitalCurrencyAmount(1);
+        parameters.setCalculateStatisticsOnlyForDX(true);
         SimulationActionDeciderParameters param = new SimulationActionDeciderParameters();
         param.setNumberOfHistoricalTransactionsToRunSimulation(300);
 
         SimulationParametersTO simParam = new SimulationParametersTO();
         simParam.setDoubleStep(1);
-        simParam.setPercentageBuyFrom(0.1);
-        simParam.setPercentageBuyTo(5.1);
-        simParam.setPercentageSelFrom(0.1);
-        simParam.setPercentageSelTo(5.1);
-        simParam.setMaximumLoosePercentageFrom(10);
-        simParam.setMaximumLoosePercentageTo(15);
-        simParam.setNumberOfThreads(3);
-        simParam.setTriggerTargetCountFrom(1);
-        simParam.setTriggerTargetCountTo(22);
+        simParam.setPercentageBuyFrom(1);
+        simParam.setPercentageBuyTo(7);
+        simParam.setPercentageSelFrom(1);
+        simParam.setPercentageSelTo(7);
+        simParam.setMaximumLoosePercentageFrom(99);
+        simParam.setMaximumLoosePercentageTo(99);
+        simParam.setNumberOfThreads(4);
+        simParam.setTriggerTargetCountFrom(2);
+        simParam.setTriggerTargetCountTo(30);
         simParam.setHistoricalBufferTrimSizePercentage(55);
+        simParam.setCalculateStatisticsOnlyForDX(false);
+
 
         param.setParameters(simParam);
         parameters.setTrendParameters(param);
@@ -55,7 +57,7 @@ public class SimulationActionDeciderMain implements WithLog{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            logInfo(LOG, "Current wallet statistics earnings -> {} with wallet {} ", simulation.getTradeWalletStatistics().calculateAssetChangeInPercentage(), simulation.getTradeWalletStatistics().getLastWallet().orElse(null) );
+            logInfo(LOG, "Current wallet statistics earnings -> {} with wallet {} with sell exchange rate {} ", simulation.getTradeWalletStatistics().calculateAssetChangeInPercentage(), simulation.getTradeWalletStatistics().getLastWallet().orElse(null),  simulation.getExchange().getExchangeData().getSellExchangeRate());
         }
 
     }

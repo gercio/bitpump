@@ -73,6 +73,7 @@ public class TraderSimulationRunner implements WithLog {
                             .withTradeActionDeciderParameters(param)
                             .withStartMoneyAmount(this.parameters.getMoneyAmount())
                             .withStartDigitalCurrencyAmount(this.parameters.getDigitalCurrencyAmount())
+                            .withCalculateStatisticsOnlyForDX(this.parameters.getCalculateStatisticsOnlyForDX())
                             .build();
 
                     runSimulation(parameters);

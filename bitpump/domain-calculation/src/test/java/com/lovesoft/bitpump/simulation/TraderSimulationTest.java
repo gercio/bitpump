@@ -13,7 +13,7 @@ public class TraderSimulationTest {
 
     @BeforeEach
     public void beforeEach() {
-        history = new SimulationHistoricalTransaction();
+        history = new SimulationHistoricalTransaction(1);
         initializeTest(1, 1, 1, 90);
     }
 

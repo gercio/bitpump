@@ -5,6 +5,7 @@ import com.lovesoft.bitpump.calculation.trade.TraderFactory;
 import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
 import com.lovesoft.bitpump.test.TestSupport;
 import com.lovesoft.bitpump.to.TradeWalletTO;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +41,15 @@ class TradeWalletStatisticsTest {
     public void testCalculateAverageChangeInPercentageIncludingDigitalCurrency() {
         start(100, 0);
         tradeWalletStatistics.updateWalletTO(new TradeWalletTO(100, 1));
+        assertEquals(100, tradeWalletStatistics.calculateAssetChangeInPercentage());
+    }
+
+    @Test
+    @Ignore // This functionality is not implemented
+    public void testCalculateWithDigitalCurrency() {
+        tradeWalletStatistics.calculateOnlyWithDC();
+        start(100, 1);
+        tradeWalletStatistics.updateWalletTO(new TradeWalletTO(10, 2));
         assertEquals(100, tradeWalletStatistics.calculateAssetChangeInPercentage());
     }
 

@@ -13,7 +13,7 @@ public class TradeWalletStatistics implements WithLog {
     private double lastAssetValue;
     private Exchange exchange;
     private Optional<TradeWalletTO> lastWallet = Optional.empty();
-    //private final static Logger LOG = LoggerFactory.getLogger(TradeWalletStatistics.class);
+    private boolean calculateOnlyWithDC = false;
 
     public TradeWalletStatistics(Exchange exchange) {
         Preconditions.checkNotNull(exchange);
@@ -27,7 +27,11 @@ public class TradeWalletStatistics implements WithLog {
 
     private double calculate(TradeWalletTO walletTO) {
         //logDebug(LOG, "Wallet stuff: {}. Money after sell of DC: {}.", walletTO.toString(), exchange.calculateMoneyFromDC(walletTO.getDigitalCurrencyAmount()));
-        return exchange.calculateMoneyFromDC(walletTO.getDigitalCurrencyAmount()) + walletTO.getMoneyAmount();
+//        if (calculateOnlyWithDC) {
+//            return walletTO.getDigitalCurrencyAmount();
+//        } else {
+            return exchange.calculateMoneyFromDC(walletTO.getDigitalCurrencyAmount()) + walletTO.getMoneyAmount();
+//        }
     }
 
     public synchronized void updateWalletTO(TradeWalletTO last) {
@@ -44,5 +48,12 @@ public class TradeWalletStatistics implements WithLog {
 
     public Optional<TradeWalletTO> getLastWallet() {
         return lastWallet;
+    }
+
+    /**
+     * Use only digital currency to calculate statistics
+     */
+    public void calculateOnlyWithDC() {
+        this.calculateOnlyWithDC = true;
     }
 }

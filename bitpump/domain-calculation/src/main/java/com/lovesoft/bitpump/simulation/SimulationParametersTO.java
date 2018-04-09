@@ -15,6 +15,7 @@ public class SimulationParametersTO {
     private double historicalBufferTrimSizePercentage;
     private double digitalCurrencyAmount;
     private double moneyAmount;
+    private boolean calculateStatisticsOnlyForDX;
 
     public double getDoubleStep() {
         return doubleStep;
@@ -104,12 +105,24 @@ public class SimulationParametersTO {
         this.historicalBufferTrimSizePercentage = historicalBufferTrimSizePercentage;
     }
 
-    @Override public String toString() {
-        return "SimulationParametersTO{" + "doubleStep=" + doubleStep + ", percentageBuyFrom=" + percentageBuyFrom + ", percentageBuyTo=" + percentageBuyTo
-                + ", percentageSelFrom=" + percentageSelFrom + ", percentageSelTo=" + percentageSelTo + ", triggerTargetCountFrom=" + triggerTargetCountFrom
-                + ", triggerTargetCountTo=" + triggerTargetCountTo + ", maximumLoosePercentageFrom=" + maximumLoosePercentageFrom
-                + ", maximumLoosePercentageTo=" + maximumLoosePercentageTo + ", numberOfThreads=" + numberOfThreads + ", historicalBufferTrimSizePercentage="
-                + historicalBufferTrimSizePercentage + '}';
+    @Override
+    public String toString() {
+        return "SimulationParametersTO{" +
+                "doubleStep=" + doubleStep +
+                ", percentageBuyFrom=" + percentageBuyFrom +
+                ", percentageBuyTo=" + percentageBuyTo +
+                ", percentageSelFrom=" + percentageSelFrom +
+                ", percentageSelTo=" + percentageSelTo +
+                ", triggerTargetCountFrom=" + triggerTargetCountFrom +
+                ", triggerTargetCountTo=" + triggerTargetCountTo +
+                ", maximumLoosePercentageFrom=" + maximumLoosePercentageFrom +
+                ", maximumLoosePercentageTo=" + maximumLoosePercentageTo +
+                ", numberOfThreads=" + numberOfThreads +
+                ", historicalBufferTrimSizePercentage=" + historicalBufferTrimSizePercentage +
+                ", digitalCurrencyAmount=" + digitalCurrencyAmount +
+                ", moneyAmount=" + moneyAmount +
+                ", calculateStatisticsOnlyForDX=" + calculateStatisticsOnlyForDX +
+                '}';
     }
 
     public void setDigitalCurrencyAmount(double digitalCurrencyAmount) {
@@ -126,5 +139,13 @@ public class SimulationParametersTO {
 
     public double getMoneyAmount() {
         return moneyAmount;
+    }
+
+    public boolean getCalculateStatisticsOnlyForDX() {
+        return calculateStatisticsOnlyForDX;
+    }
+
+    public void setCalculateStatisticsOnlyForDX(boolean calculateStatisticsOnlyForDX) {
+        this.calculateStatisticsOnlyForDX = calculateStatisticsOnlyForDX;
     }
 }

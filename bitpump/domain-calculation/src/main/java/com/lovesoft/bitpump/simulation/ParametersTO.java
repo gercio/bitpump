@@ -8,6 +8,7 @@ public class ParametersTO {
     private double startDigitalCurrencyAmount;
     private double startMoneyAmount;
     private HistoricalTransactionSource historicalTransactionSource;
+    private boolean calculateStatisticsOnlyForDX = false;
 
     public ParametersTO() {
 
@@ -85,7 +86,15 @@ public class ParametersTO {
                 ", maximumLoosePercentage=" + maximumLoosePercentage +
                 ", startDigitalCurrencyAmount=" + startDigitalCurrencyAmount +
                 ", startMoneyAmount=" + startMoneyAmount +
+                ", calculateStatisticsOnlyForDX=" + calculateStatisticsOnlyForDX +
                 '}';
     }
 
+    public boolean getCalculateStatisticsOnlyForDX() {
+        return calculateStatisticsOnlyForDX;
+    }
+
+    public void setCalculateStatisticsOnlyForDX(boolean calculateStatisticsOnlyForDX) {
+        this.calculateStatisticsOnlyForDX = calculateStatisticsOnlyForDX;
+    }
 }

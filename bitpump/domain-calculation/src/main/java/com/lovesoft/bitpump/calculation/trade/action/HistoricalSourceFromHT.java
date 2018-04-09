@@ -1,7 +1,6 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.lovesoft.bitpump.simulation.HistoricalTransactionSource;
-import com.lovesoft.bitpump.support.BitPumpRuntimeException;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 
 import java.util.ArrayList;
@@ -15,8 +14,7 @@ public class HistoricalSourceFromHT implements HistoricalTransactionSource {
     public HistoricalSourceFromHT(List<HistoricalTransactionTO> historicalTransactionTOList) {
         historicalTransactionTOList.forEach(to -> {
             htList.add(to.getTransactionPrice());
-            to.getTransactionPriceMVA().ifPresent( price -> htMVAList.add(price));
-            to.getTransactionPriceMVA().orElseThrow(() -> new BitPumpRuntimeException("No price MVA for history. What to do?"));
+            htMVAList.add(to.getTransactionPriceMVA());
         });
     }
 

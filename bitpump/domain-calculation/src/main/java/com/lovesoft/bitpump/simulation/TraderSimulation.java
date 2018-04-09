@@ -3,6 +3,7 @@ package com.lovesoft.bitpump.simulation;
 import com.lovesoft.bitpump.calculation.trade.TraderFactory;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
+import com.lovesoft.bitpump.exchange.Exchange;
 import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
 import com.lovesoft.bitpump.support.WithLog;
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
@@ -36,8 +37,15 @@ public class TraderSimulation implements Runnable, WithLog {
         counter = 0;
         traderFactory.getTradeWallet().addDigitalCurrency(parameters.getStartDigitalCurrencyAmount());
         traderFactory.getTradeWallet().addMoneyAmount(parameters.getStartMoneyAmount());
-        tradeWalletStatistics = new TradeWalletStatistics(traderFactory.getExchange());
+        tradeWalletStatistics = new TradeWalletStatistics(getExchange());
+//        if(parameters.getCalculateStatisticsOnlyForDX()) {
+//            tradeWalletStatistics.calculateOnlyWithDC();
+//        }
         this.parametersTo = parameters;
+    }
+
+    public Exchange getExchange() {
+        return traderFactory.getExchange();
     }
 
     public void setPrintSummary(boolean printSummary) {
@@ -51,7 +59,7 @@ public class TraderSimulation implements Runnable, WithLog {
     public void run() {
         // remove all historical transactions
         TradeWallet tradeWallet = traderFactory.getTradeWallet();
-        LocalSimulationExchange exchange = (LocalSimulationExchange) traderFactory.getExchange();
+        LocalSimulationExchange exchange = (LocalSimulationExchange) getExchange();
 
         if(parametersTo != null) {
             tradeWallet.setDigitalCurrencyAmount(parametersTo.getStartDigitalCurrencyAmount());
@@ -61,10 +69,11 @@ public class TraderSimulation implements Runnable, WithLog {
             tradeWallet.setMoneyAmount(100);
         }
 
-        historicalTransactionSource.getHistoricalTransactions().forEach(exchangeRate -> {
-
+        for(int i = 0 ; i < historicalTransactionSource.getHistoricalTransactions().size(); ++i) {
+            double exchangeRate = historicalTransactionSource.getHistoricalTransactions().get(i);
+            double exchangeRateMVA = historicalTransactionSource.getHistoricalTransactionsMVA().get(i);
             // Simulate that something new trade came up
-            exchange.keepOnlyThisHistoricalTransaction(new HistoricalTransactionTO(counter++, exchangeRate));
+            exchange.keepOnlyThisHistoricalTransaction(new HistoricalTransactionTO(counter++, exchangeRate, exchangeRateMVA));
 
             // Update statistics
             if(counter <= 1) {
@@ -77,7 +86,8 @@ public class TraderSimulation implements Runnable, WithLog {
             }
             traderFactory.getTrader().doTrades();
             tradeWalletStatistics.updateWalletTO(tradeWallet.getTraderWalletTO());
-        } );
+        }
+
         tradeWalletStatistics.updateWalletTO(tradeWallet.getTraderWalletTO());
         statisticsConsumer.ifPresent(c -> c.accept(tradeWalletStatistics));
         if(printSummary) {

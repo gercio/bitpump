@@ -5,7 +5,6 @@ import com.lovesoft.bitpump.calculation.trade.amount.TradeAmountDecider;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.exchange.Exchange;
 import com.lovesoft.bitpump.support.OptionalConsumer;
-import com.lovesoft.bitpump.support.OptionalConsumerBoolean;
 
 import java.util.Optional;
 
@@ -15,12 +14,11 @@ public class TraderBuilder {
     private TradeActionDecider tradeActionDecider;
     private TradeAmountDecider tradeAmountDecider;
     private TradeWallet tradeWallet;
+    private Optional<StopLoose> stopLooseOptional = Optional.empty();
 
     public void wthStopLoose(StopLoose stopLoose) {
         this.stopLooseOptional = Optional.of(stopLoose);
     }
-
-    private Optional<StopLoose> stopLooseOptional = Optional.empty();
 
     public TraderBuilder withExchange(Exchange exchange) {
         this.exchange = exchange;

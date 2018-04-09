@@ -8,6 +8,7 @@ public final class ParametersTOBuilder {
     private double startMoneyAmount;
     private HistoricalTransactionSource historicalTransactionSource;
     private TradeActionParameters parameters;
+    private boolean calculateStatisticsOnlyForDX = false;
 
     private ParametersTOBuilder() {
     }
@@ -18,6 +19,11 @@ public final class ParametersTOBuilder {
 
     public ParametersTOBuilder withStartDigitalCurrencyAmount(double startDigitalCurrencyAmount) {
         this.startDigitalCurrencyAmount = startDigitalCurrencyAmount;
+        return this;
+    }
+
+    public ParametersTOBuilder withCalculateStatisticsOnlyForDX(boolean calculateStatisticsOnlyForDX) {
+        this.calculateStatisticsOnlyForDX = calculateStatisticsOnlyForDX;
         return this;
     }
 
@@ -48,6 +54,7 @@ public final class ParametersTOBuilder {
         parametersTO.setStartDigitalCurrencyAmount(startDigitalCurrencyAmount);
         parametersTO.setStartMoneyAmount(startMoneyAmount);
         parametersTO.setTrendParameters(parameters);
+        parametersTO.setCalculateStatisticsOnlyForDX(calculateStatisticsOnlyForDX);
         return parametersTO;
     }
 }

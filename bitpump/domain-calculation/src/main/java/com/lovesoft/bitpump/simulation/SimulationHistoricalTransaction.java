@@ -5,15 +5,15 @@ import com.lovesoft.bitpump.support.AverageWeightValueCalculator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class SimulationHistoricalTransaction implements HistoricalTransactionSource {
     private ChartName chartName;
     private List<Double> historicalTransactionCache = new ArrayList<>();
     private List<Double> historicalTransactionCacheMVA = new ArrayList<>();
-    private Optional<Integer> movingAverageNumberOfElements = Optional.empty();
+    private int movingAverageNumberOfElements;
 
-    public SimulationHistoricalTransaction() {
+    public SimulationHistoricalTransaction(int movingAverageNumberOfElements) {
+        this.movingAverageNumberOfElements = movingAverageNumberOfElements;
     }
 
     @Override
@@ -26,14 +26,12 @@ public class SimulationHistoricalTransaction implements HistoricalTransactionSou
     }
 
     private void calculateMVA() {
-        if(movingAverageNumberOfElements.isPresent()) {
-            historicalTransactionCacheMVA.clear();
-            AverageWeightValueCalculator calculator = new AverageWeightValueCalculator(movingAverageNumberOfElements.get());
-            historicalTransactionCache.forEach(ht -> {
-                calculator.addValue(ht, 1.0);
-                historicalTransactionCacheMVA.add(calculator.calculateAverageValue());
-            });
-        }
+        historicalTransactionCacheMVA.clear();
+        AverageWeightValueCalculator calculator = new AverageWeightValueCalculator(movingAverageNumberOfElements);
+        historicalTransactionCache.forEach(ht -> {
+            calculator.addValue(ht, 1.0);
+            historicalTransactionCacheMVA.add(calculator.calculateAverageValue());
+        });
     }
 
     @Override

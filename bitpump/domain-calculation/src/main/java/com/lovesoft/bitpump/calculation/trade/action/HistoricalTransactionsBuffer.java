@@ -61,6 +61,6 @@ public class HistoricalTransactionsBuffer implements HistoricalTransactionSource
 
     @Override
     public List<Double> getHistoricalTransactionsMVA() {
-        return historicalTransactionList.stream().filter(to -> to.getTransactionPriceMVA().isPresent()).map( to -> to.getTransactionPriceMVA().get()).collect(Collectors.toList());
+        return historicalTransactionList.stream().map( to -> to.getTransactionPriceMVA()).collect(Collectors.toList());
     }
 }

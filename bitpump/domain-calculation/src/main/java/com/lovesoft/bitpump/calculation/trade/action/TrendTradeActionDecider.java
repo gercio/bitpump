@@ -78,7 +78,7 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
     }
 
     private TradeAction checkTrendGoesDown(List<HistoricalTransactionTO> reversedHistory) {
-        double lastPrice = reversedHistory.get(0).getTransactionPrice();
+        double lastPrice = reversedHistory.get(0).getTransactionPriceMVA();
         double highestPrice = getHighestPrice(reversedHistory);
         double calculatedPercentage = MathSupport.calculatePercentageOfXisY(lastPrice, highestPrice);
         logDebug(LOG, "Found highest price {} and last price {}. Transaction number is {}. Calculated price down percent = {}", highestPrice, lastPrice, transactions.size(), 100 - calculatedPercentage);
@@ -94,7 +94,7 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
     }
 
     private Optional<TradeAction> checkTrendGoesUp(List<HistoricalTransactionTO> reversedHistory) {
-        double lastPrice = reversedHistory.get(0).getTransactionPrice();
+        double lastPrice = reversedHistory.get(0).getTransactionPriceMVA();
         double lowestPrice = getLowestPrice(reversedHistory);
         double calculatedPercentage = MathSupport.calculatePercentageOfXisY(lastPrice, lowestPrice);
         logDebug(LOG,"Found lowest price {} and last price {}. Transaction number is {}. Calculated price up percent = {}", lowestPrice, lastPrice, transactions.size(), 100 - calculatedPercentage);
@@ -114,8 +114,8 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
     private double getHighestPrice(List<HistoricalTransactionTO> reversedHistory) {
         double highest = -1.0;
         for(HistoricalTransactionTO to: reversedHistory) {
-            if(to.getTransactionPrice() > highest) {
-                highest = to.getTransactionPrice();
+            if(to.getTransactionPriceMVA() > highest) {
+                highest = to.getTransactionPriceMVA();
             }
         }
         return highest;
@@ -124,8 +124,8 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
     private double getLowestPrice(List<HistoricalTransactionTO> reversedHistory) {
         double lowest = Double.MAX_VALUE;
         for(HistoricalTransactionTO to: reversedHistory) {
-            if(to.getTransactionPrice() < lowest) {
-                lowest = to.getTransactionPrice();
+            if(to.getTransactionPriceMVA() < lowest) {
+                lowest = to.getTransactionPriceMVA();
             }
         }
         return lowest;

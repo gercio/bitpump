@@ -1,8 +1,8 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.lovesoft.bitpump.to.HistoricalTransactionTO;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;

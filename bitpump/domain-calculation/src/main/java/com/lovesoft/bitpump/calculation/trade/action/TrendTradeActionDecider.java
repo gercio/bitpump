@@ -46,10 +46,6 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
         trigger.setTargetSellCount(targetSellCount);
     }
 
-    @Override
-    public void loadHistoricalData(List<HistoricalTransactionTO> historicalTransactions) {
-        transactions.addAll(historicalTransactions);
-    }
 
     @Override
     public Optional<TradeAction> calculateTradeAction(ExchangeDataTO exchangeData) {

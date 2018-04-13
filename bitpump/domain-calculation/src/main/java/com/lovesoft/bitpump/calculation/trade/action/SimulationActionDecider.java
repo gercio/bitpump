@@ -39,16 +39,6 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
         this.tradeWalletSupplier = tradeWalletSupplier;
     }
 
-    /**
-     * Run simulation for historical data and find best Parameters.
-     * @param htList
-     */
-    @Override
-    public void loadHistoricalData(List<HistoricalTransactionTO> htList) {
-        Preconditions.checkNotNull(htList);
-        historicalTransactionsBuffer.keep(htList);
-        runSimulation();
-    }
 
     private void runSimulation() {
         logInfo(LOG, "Run simulation.");

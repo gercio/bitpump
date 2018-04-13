@@ -19,8 +19,7 @@ public class CandleChartBuilder {
             double value = vat.getValue();
             if(periodEnd <= eventTime) {
                 periodEnd = eventTime + interval.getIntervalInMS();
-                candleValue = new CandleValue();
-                candleValue.setOpen(value);
+                candleValue = new CandleValue(value, value, value, value);
                 list.add(candleValue);
             }
             candleValue.setMaxIfBigger(value);

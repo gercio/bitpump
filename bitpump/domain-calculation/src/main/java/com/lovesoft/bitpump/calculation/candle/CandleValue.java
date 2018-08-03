@@ -73,4 +73,8 @@ public class CandleValue {
                 ", close=" + close +
                 '}';
     }
+
+    public boolean haveBiggerValue(CandleValue candleValue) {
+        return getClose() > candleValue.getClose();
+    }
 }

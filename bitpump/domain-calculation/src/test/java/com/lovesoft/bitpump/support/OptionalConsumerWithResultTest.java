@@ -1,8 +1,10 @@
 package com.lovesoft.bitpump.support;
 
-import java.util.Optional;
+import com.lovesoft.bitpump.commons.OptionalConsumerWithResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 /**
  * Created 24.02.2018 19:20.

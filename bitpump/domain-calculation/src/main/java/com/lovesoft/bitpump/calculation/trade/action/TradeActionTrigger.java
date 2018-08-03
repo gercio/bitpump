@@ -1,11 +1,12 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.google.common.base.Preconditions;
-import com.lovesoft.bitpump.support.WithLog;
+import com.lovesoft.bitpump.commons.WithLog;
 import com.lovesoft.bitpump.to.TradeAction;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 public class TradeActionTrigger implements WithLog {
     private int targetBuyCount;

@@ -2,8 +2,8 @@ package com.lovesoft.bitpump.simulation;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
-import com.lovesoft.bitpump.support.OptionalConsumerWithResult;
-import com.lovesoft.bitpump.support.WithLog;
+import com.lovesoft.bitpump.commons.OptionalConsumerWithResult;
+import com.lovesoft.bitpump.commons.WithLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

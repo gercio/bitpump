@@ -1,10 +1,9 @@
-package com.lovesoft.bitpump.support;
+package com.lovesoft.bitpump.commons;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 /**
  * Created 26.02.2018 12:59.

@@ -1,5 +1,7 @@
 package com.lovesoft.bitpump.support;
 
+import com.lovesoft.bitpump.commons.BitPumpRuntimeException;
+
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;

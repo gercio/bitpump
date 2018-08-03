@@ -11,35 +11,129 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CandleTimeIndicatorActionDeciderTest {
 
     @Test
-    public void testIt() {
-        CTIADParameters parameters = new CTIADParameters();
-        parameters.setGreenCounter(4);
-        parameters.setPreviousCandleToCompare(2);
-        CandleTimeIndicatorActionDecider decider = new CandleTimeIndicatorActionDecider(parameters);
+    public void testSellAfterGreenTrigger() {
+        CandleTimeIndicatorActionDecider decider = createDecider(4, 4, 2);
 
-        ExchangeDataTOBuilder builder = new ExchangeDataTOBuilder();
-        List<HistoricalTransactionTO> historicalTransactions = new ArrayList<>();
         // Create four candles with price which is rising
+        List<HistoricalTransactionTO> historicalTransactions = new ArrayList<>();
         final long interval =  ChartTimeInterval.HOUR_4.getIntervalInMS();
-        historicalTransactions.addAll(builder.build(10,15,5,12, interval));
-        historicalTransactions.addAll(builder.build(11,16,7,14, interval * 2));
-        historicalTransactions.addAll(builder.build(12,17,7,16, interval * 3));
-        historicalTransactions.addAll(builder.build(13,18,7,18, interval * 4));
-        historicalTransactions.addAll(builder.build(14,20,4,19, interval * 5));
-        historicalTransactions.addAll(builder.build(14,20,10,20, interval * 6));
+        historicalTransactions.addAll(buildCandle(12, interval));
+        historicalTransactions.addAll(buildCandle(14, interval * 2));
+        historicalTransactions.addAll(buildCandle(16, interval * 3));
+        historicalTransactions.addAll(buildCandle(18, interval * 4));
+        historicalTransactions.addAll(buildCandle(21, interval * 5));
+        historicalTransactions.addAll(buildCandle(20, interval * 6));
 
-        ExchangeDataTO ed = new ExchangeDataTO(historicalTransactions);
-        Optional<TradeAction> ta = decider.calculateTradeAction(ed);
+        Optional<TradeAction> ta = calulateTradeAction(decider, historicalTransactions);
 
         assertTrue(ta.isPresent());
         // As green counter is set to 4 and there is for green candles, then decider should make a sold action
         assertEquals(ta.get(), TradeAction.SELL);
+    }
+
+    private List<HistoricalTransactionTO> buildCandle(double close, long interval) {
+        ExchangeDataTOBuilder builder = new ExchangeDataTOBuilder();
+        return builder.build(10,15,5,close, interval);
+    }
+
+    @Test
+    public void testBuyAfterRedTrigger() {
+        CandleTimeIndicatorActionDecider decider = createDecider(4, 4, 2);
+
+        // Create four candles with price which is decreasing
+        List<HistoricalTransactionTO> historicalTransactions = new ArrayList<>();
+        final long interval =  ChartTimeInterval.HOUR_4.getIntervalInMS();
+        historicalTransactions.addAll(buildCandle(12, interval));
+        historicalTransactions.addAll(buildCandle(10, interval * 2));
+        historicalTransactions.addAll(buildCandle(5, interval * 3));
+        historicalTransactions.addAll(buildCandle(6, interval * 4));
+        historicalTransactions.addAll(buildCandle(1, interval * 5));
+        historicalTransactions.addAll(buildCandle(2, interval * 6));
+
+        Optional<TradeAction> ta = calulateTradeAction(decider, historicalTransactions);
+
+        assertTrue(ta.isPresent());
+        // As green counter is set to 4 and there is for green candles, then decider should make a sold action
+        assertEquals(ta.get(), TradeAction.BUY);
+    }
+
+    private Optional<TradeAction> calulateTradeAction(CandleTimeIndicatorActionDecider decider, List<HistoricalTransactionTO> historicalTransactions) {
+        ExchangeDataTO ed = new ExchangeDataTO(historicalTransactions);
+        return decider.calculateTradeAction(ed);
+    }
+
+    @Test
+    public void testRedAfterGreen() {
+        CandleTimeIndicatorActionDecider decider = createDecider(4, 4, 1);
+
+        List<HistoricalTransactionTO> historicalTransactions = new ArrayList<>();
+        final long interval =  ChartTimeInterval.HOUR_4.getIntervalInMS();
+        historicalTransactions.addAll(buildCandle(12, interval));
+        historicalTransactions.addAll(buildCandle(13, interval * 2));
+        historicalTransactions.addAll(buildCandle(14, interval * 3));
+        historicalTransactions.addAll(buildCandle(5, interval * 4));
+        historicalTransactions.addAll(buildCandle(3, interval * 5));
+        historicalTransactions.addAll(buildCandle(2, interval * 6));
+        historicalTransactions.addAll(buildCandle(1, interval * 7));
+
+        Optional<TradeAction> ta = calulateTradeAction(decider, historicalTransactions);
+
+        assertTrue(ta.isPresent());
+        // As green counter is set to 4 and there is for green candles, then decider should make a sold action
+        assertEquals(ta.get(), TradeAction.BUY);
+    }
+
+    @Test
+    public void shouldNotSellAfterSell() {
+        CandleTimeIndicatorActionDecider decider = createDecider(1, 2, 1);
+
+        List<HistoricalTransactionTO> historicalTransactions = new ArrayList<>();
+        final long interval =  ChartTimeInterval.HOUR_4.getIntervalInMS();
+        historicalTransactions.addAll(buildCandle(12, interval));
+        historicalTransactions.addAll(buildCandle(13, interval * 2));
+        historicalTransactions.addAll(buildCandle(14, interval * 3));
+        historicalTransactions.addAll(buildCandle(5, interval * 4));
+        historicalTransactions.addAll(buildCandle(3, interval * 5));
+        historicalTransactions.addAll(buildCandle(2, interval * 6));
+
+        Optional<TradeAction> ta = calulateTradeAction(decider, historicalTransactions);
+
+        assertFalse(ta.isPresent());
+    }
+
+    @Test
+    public void shouldKeepStatus() {
+        CandleTimeIndicatorActionDecider decider = createDecider(2, 2, 1);
+
+        List<HistoricalTransactionTO> historicalTransactions = new ArrayList<>();
+        final long interval =  ChartTimeInterval.HOUR_4.getIntervalInMS();
+        historicalTransactions.addAll(buildCandle(12, interval));
+        calulateTradeAction(decider, historicalTransactions);
+
+        historicalTransactions.clear();
+        historicalTransactions.addAll(buildCandle(13, interval * 2));
+        calulateTradeAction(decider, historicalTransactions);
+
+        historicalTransactions.clear();
+        historicalTransactions.addAll(buildCandle(14, interval * 2));
+        Optional<TradeAction> ta = calulateTradeAction(decider, historicalTransactions);
+
+        assertTrue(ta.isPresent());
+        assertEquals(ta.get(), TradeAction.SELL);
+    }
+
+    private CandleTimeIndicatorActionDecider createDecider(int counterForGreen, int counterForRed, int previousCandleToCompare) {
+        CTIADParameters parameters = new CTIADParameters();
+        parameters.setGreenCounter(counterForGreen);
+        parameters.setRedCounter(counterForRed);
+        parameters.setPreviousCandleToCompare(previousCandleToCompare);
+        parameters.setChartTimeInterval(ChartTimeInterval.HOUR_4);
+        return new CandleTimeIndicatorActionDecider(parameters);
     }
 
 }

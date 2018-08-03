@@ -7,9 +7,9 @@ import com.lovesoft.bitpump.calculation.trade.action.TradeActionParameters;
 import com.lovesoft.bitpump.calculation.trade.action.WalletToSupplierObserver;
 import com.lovesoft.bitpump.calculation.trade.amount.TradeAmountDeciderBuilder;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
+import com.lovesoft.bitpump.commons.OptionalConsumer;
 import com.lovesoft.bitpump.exchange.Exchange;
 import com.lovesoft.bitpump.exchange.ExchangeBuilder;
-import com.lovesoft.bitpump.support.OptionalConsumer;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
 import com.lovesoft.bitpump.to.TradeWalletTO;
 

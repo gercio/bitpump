@@ -1,4 +1,4 @@
-package com.lovesoft.bitpump.support;
+package com.lovesoft.bitpump.commons;
 
 import com.google.common.base.Preconditions;
 

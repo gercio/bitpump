@@ -1,4 +1,4 @@
-package com.lovesoft.bitpump.support;
+package com.lovesoft.bitpump.commons;
 
 import java.util.Optional;
 import java.util.function.Function;

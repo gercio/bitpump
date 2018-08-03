@@ -1,6 +1,6 @@
 package com.lovesoft.bitpump.calculation;
 
-import com.lovesoft.bitpump.support.BitPumpRuntimeException;
+import com.lovesoft.bitpump.commons.BitPumpRuntimeException;
 
 /**
  * Created 06.03.2018 20:41.

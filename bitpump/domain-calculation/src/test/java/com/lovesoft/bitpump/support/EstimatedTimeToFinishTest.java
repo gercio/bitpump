@@ -1,5 +1,6 @@
 package com.lovesoft.bitpump.support;
 
+import com.lovesoft.bitpump.commons.EstimatedTimeToFinish;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

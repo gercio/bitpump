@@ -1,8 +1,8 @@
 package com.lovesoft.bitpump.simulation;
 
 import com.lovesoft.bitpump.calculation.trade.action.SimulationActionDeciderParameters;
+import com.lovesoft.bitpump.commons.WithLog;
 import com.lovesoft.bitpump.simulation.SimulationDataSupport.ChartName;
-import com.lovesoft.bitpump.support.WithLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

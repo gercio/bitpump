@@ -1,5 +1,6 @@
 package com.lovesoft.bitpump.support;
 
+import com.lovesoft.bitpump.commons.OptionalConsumerBoolean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ public class OptionalConsumerBooleanTest {
 
     @Test
     public void testPresent() {
-        boolean result = OptionalConsumerBoolean.of(Optional.of(5.0)).ifPresent( v -> v == 5.0).ifNotPresent(() -> false).getBoolean();
+        boolean result = OptionalConsumerBoolean.of(Optional.of(5.0)).ifPresent(v -> v == 5.0).ifNotPresent(() -> false).getBoolean();
         Assertions.assertTrue(result, "Must be true because there was optional and it's value was 5");
     }
 

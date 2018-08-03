@@ -2,8 +2,8 @@ package com.lovesoft.bitpump.simulation;
 
 import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.calculation.trade.action.TrendTradeActionDeciderParameters;
-import com.lovesoft.bitpump.support.EstimatedTimeToFinish;
-import com.lovesoft.bitpump.support.WithLog;
+import com.lovesoft.bitpump.commons.EstimatedTimeToFinish;
+import com.lovesoft.bitpump.commons.WithLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

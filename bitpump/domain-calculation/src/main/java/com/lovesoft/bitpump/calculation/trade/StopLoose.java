@@ -1,8 +1,8 @@
 package com.lovesoft.bitpump.calculation.trade;
 
 import com.google.common.base.Preconditions;
-import com.lovesoft.bitpump.support.MathSupport;
-import com.lovesoft.bitpump.support.OptionalConsumerBoolean;
+import com.lovesoft.bitpump.commons.MathSupport;
+import com.lovesoft.bitpump.commons.OptionalConsumerBoolean;
 
 public class StopLoose {
     private double maximumLoosePercentage;

@@ -1,6 +1,6 @@
 package com.lovesoft.bitpump.to;
 
-import com.lovesoft.bitpump.support.MathSupport;
+import com.lovesoft.bitpump.commons.MathSupport;
 
 public class  TradeWalletTO {
     private double moneyAmount;

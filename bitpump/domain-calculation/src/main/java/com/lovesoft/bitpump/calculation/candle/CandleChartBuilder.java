@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CandleChartBuilder {
-    public CandleChart build(List<ValueAtTime> values, ChartTimeInterval interval) {
+    public CandleChart build(List<? extends ValueAtTime> values, ChartTimeInterval interval) {
         Preconditions.checkArgument(!values.isEmpty(), "Values can't be empty.");
 
         List<CandleValue> list = new ArrayList<>();

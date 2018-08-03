@@ -3,8 +3,8 @@ package com.lovesoft.bitpump.calculation.trade;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionDecider;
 import com.lovesoft.bitpump.calculation.trade.amount.TradeAmountDecider;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
+import com.lovesoft.bitpump.commons.OptionalConsumer;
 import com.lovesoft.bitpump.exchange.Exchange;
-import com.lovesoft.bitpump.support.OptionalConsumer;
 
 import java.util.Optional;
 

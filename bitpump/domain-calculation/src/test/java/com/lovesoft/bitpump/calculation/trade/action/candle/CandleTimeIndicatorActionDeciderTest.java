@@ -120,7 +120,7 @@ class CandleTimeIndicatorActionDeciderTest {
         calulateTradeAction(decider, historicalTransactions);
 
         historicalTransactions.clear();
-        historicalTransactions.addAll(buildCandle(14, interval * 2));
+        historicalTransactions.addAll(buildCandle(14, interval * 2)); // Green is triggered so its time to sell!
         Optional<TradeAction> ta = calulateTradeAction(decider, historicalTransactions);
 
         assertTrue(ta.isPresent());

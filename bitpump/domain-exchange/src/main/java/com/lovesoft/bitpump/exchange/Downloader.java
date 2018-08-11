@@ -199,7 +199,7 @@ public class Downloader {
         try {
             new Downloader().download(DATE_FORMAT.parse("2018-08-10 22:22:22"), new FileOutputStream("downloaded.txt"));
         } catch (Exception e) {
-            LOG.error("Can't run downloading.");
+            LOG.error("Can't run downloading.", e);
         }
     }
 }

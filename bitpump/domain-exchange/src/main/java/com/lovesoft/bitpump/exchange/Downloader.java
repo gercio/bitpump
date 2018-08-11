@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Just to get some market data, to teach/test trading algorithms.
  * Created by Patryk on 06.08.18 18:53 at Milky Way Galaxy.
  */
 public class Downloader {
@@ -22,6 +23,7 @@ public class Downloader {
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
     private static final String SEPARATOR = "|";
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+    private static final String BITMARKET_PL_TRADES_URL = "https://www.bitmarket.pl/json/BTCPLN/trades.json";
 
     void download(Date pastDate, OutputStream outputStream) {
         List<? extends TradeTO> trades = downloadTrades(pastDate);
@@ -31,7 +33,7 @@ public class Downloader {
             try {
                 writer.write("" + t.getPrice());
                 writer.write(SEPARATOR);
-                writer.write("" + DATE_FORMAT.format(t.getDate()));
+                writer.write(DATE_FORMAT.format(t.getDate()));
                 writer.write("\n");
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -119,12 +121,10 @@ public class Downloader {
             URL url;
             if(transactionID != null) {
                 Preconditions.checkArgument(transactionID >= 0, "TransactionId should not be negative");
-                url = new URL("https://www.bitmarket.pl/json/BTCPLN/trades.json?since=" + transactionID);
+                url = new URL(BITMARKET_PL_TRADES_URL + "?since=" + transactionID);
             } else {
-                url = new URL("https://www.bitmarket.pl/json/BTCPLN/trades.json");
+                url = new URL(BITMARKET_PL_TRADES_URL);
             }
-
-
             LOG.info("URL = " + url);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -140,12 +140,6 @@ public class Downloader {
     }
 
     private class ParsingTradeTO extends TradeTO {
-//        private Double amount;
-//        private Double price;
-//        private Date date;
-//        private Long transactionId;
-//        private String type;
-
 
         public void setAmount(String amount) {
             Preconditions.checkArgument(this.getAmount() == null);

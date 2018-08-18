@@ -2,8 +2,8 @@ package com.lovesoft.bitpump.calculation.trade.action.candle;
 
 import com.lovesoft.bitpump.ExchangeDataTOBuilder;
 import com.lovesoft.bitpump.calculation.candle.ChartTimeInterval;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAction;
 import org.junit.jupiter.api.Test;
 

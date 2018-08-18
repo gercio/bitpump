@@ -6,7 +6,6 @@ import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.commons.BitPumpRuntimeException;
 import com.lovesoft.bitpump.commons.WithLog;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAmountTO;
 import com.lovesoft.bitpump.to.TradeWalletTO;
 import org.slf4j.Logger;

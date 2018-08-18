@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Patryk Kaluzny on 11.08.18 05:26 at Milky Way Galaxy.
  */
-public class TradeTO {
+public class TradeExchangeTO {
     private Double amount;
     private Double price;
     private Date date;
@@ -57,7 +57,7 @@ public class TradeTO {
         return "TradeTO{" +
                 "amount=" + amount +
                 ", price=" + price +
-                ", date=" + date +
+                ", date=" + Downloader.toDateString(date) +
                 ", transactionId=" + transactionId +
                 ", type='" + type + '\'' +
                 '}';

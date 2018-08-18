@@ -1,7 +1,7 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.lovesoft.bitpump.ExchangeDataTOBuilder;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

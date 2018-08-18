@@ -1,6 +1,10 @@
 package com.lovesoft.bitpump.candle;
 
-import com.lovesoft.bitpump.calculation.candle.*;
+import com.lovesoft.bitpump.calculation.candle.CandleChart;
+import com.lovesoft.bitpump.calculation.candle.CandleChartBuilder;
+import com.lovesoft.bitpump.calculation.candle.CandleValue;
+import com.lovesoft.bitpump.calculation.candle.ChartTimeInterval;
+import com.lovesoft.bitpump.commons.ValueAtTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -3,11 +3,11 @@ package com.lovesoft.bitpump.calculation.trade.action;
 import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.commons.OptionalConsumerWithResult;
 import com.lovesoft.bitpump.commons.WithLog;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import com.lovesoft.bitpump.simulation.ParametersTO;
 import com.lovesoft.bitpump.simulation.SimulationParametersTO;
 import com.lovesoft.bitpump.simulation.TraderSimulationRunner;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAction;
 import com.lovesoft.bitpump.to.TradeWalletTO;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
         parameters.setDigitalCurrencyAmount(to.getDigitalCurrencyAmount());
         parameters.setMoneyAmount(to.getMoneyAmount());
 
-        TraderSimulationRunner runner = new TraderSimulationRunner(new HistoricalSourceFromHT(historicalTransactionsBuffer.getHistoricalTransactionsTO()), parameters);
+        TraderSimulationRunner runner = new TraderSimulationRunner( new HistoricalSourceFromHT(historicalTransactionsBuffer.getHistoricalTransactionsTO()), parameters);
         runner.setSleepTime(10);
         runner.setPrintProgress(false);
         runner.execute();

@@ -5,8 +5,8 @@ import com.lovesoft.bitpump.calculation.candle.CandleChart;
 import com.lovesoft.bitpump.calculation.candle.CandleChartBuilder;
 import com.lovesoft.bitpump.calculation.candle.CandleValue;
 import com.lovesoft.bitpump.calculation.trade.action.TradeActionDecider;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeAction;
 
 import java.util.ArrayList;

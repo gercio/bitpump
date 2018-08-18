@@ -23,7 +23,7 @@ public interface WithLog {
     }
 
     default void logError(Logger log, String s, Object ... objects) {
-        if(log.isWarnEnabled()) {
+        if(log.isErrorEnabled()) {
             log.error(s, objects);
         }
     }

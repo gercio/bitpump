@@ -1,6 +1,5 @@
-package com.lovesoft.bitpump.support;
+package com.lovesoft.bitpump.commons;
 
-import com.lovesoft.bitpump.commons.MathSupport;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

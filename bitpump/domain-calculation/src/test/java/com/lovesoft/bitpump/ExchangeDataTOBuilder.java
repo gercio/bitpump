@@ -1,7 +1,7 @@
 package com.lovesoft.bitpump;
 
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.ExchangeDataTO;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 
 import java.util.ArrayList;
 import java.util.Arrays;

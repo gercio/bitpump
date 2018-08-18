@@ -31,8 +31,8 @@ public class SimulationActionDeciderMain implements WithLog{
         simParam.setPercentageBuyTo(7);
         simParam.setPercentageSelFrom(1);
         simParam.setPercentageSelTo(7);
-        simParam.setMaximumLoosePercentageFrom(99);
-        simParam.setMaximumLoosePercentageTo(99);
+        simParam.setMaximumLoosePercentageFrom(90);
+        simParam.setMaximumLoosePercentageTo(90);
         simParam.setNumberOfThreads(4);
         simParam.setTriggerTargetCountFrom(2);
         simParam.setTriggerTargetCountTo(30);

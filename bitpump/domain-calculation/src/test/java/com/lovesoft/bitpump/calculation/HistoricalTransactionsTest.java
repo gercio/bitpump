@@ -1,6 +1,6 @@
 package com.lovesoft.bitpump.calculation;
 
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

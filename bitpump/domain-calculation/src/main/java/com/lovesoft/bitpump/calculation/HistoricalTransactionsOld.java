@@ -1,6 +1,7 @@
 package com.lovesoft.bitpump.calculation;
 
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;

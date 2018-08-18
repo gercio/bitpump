@@ -5,8 +5,8 @@ import com.lovesoft.bitpump.calculation.trade.wallet.TradeWallet;
 import com.lovesoft.bitpump.calculation.trade.wallet.TradeWalletStatistics;
 import com.lovesoft.bitpump.commons.WithLog;
 import com.lovesoft.bitpump.exchange.Exchange;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import com.lovesoft.bitpump.exchange.LocalSimulationExchange;
-import com.lovesoft.bitpump.to.HistoricalTransactionTO;
 import com.lovesoft.bitpump.to.TradeWalletTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,9 +38,6 @@ public class TraderSimulation implements Runnable, WithLog {
         traderFactory.getTradeWallet().addDigitalCurrency(parameters.getStartDigitalCurrencyAmount());
         traderFactory.getTradeWallet().addMoneyAmount(parameters.getStartMoneyAmount());
         tradeWalletStatistics = new TradeWalletStatistics(getExchange());
-//        if(parameters.getCalculateStatisticsOnlyForDX()) {
-//            tradeWalletStatistics.calculateOnlyWithDC();
-//        }
         this.parametersTo = parameters;
     }
 
@@ -70,10 +67,13 @@ public class TraderSimulation implements Runnable, WithLog {
         }
 
         for(int i = 0 ; i < historicalTransactionSource.getHistoricalTransactions().size(); ++i) {
-            double exchangeRate = historicalTransactionSource.getHistoricalTransactions().get(i);
-            double exchangeRateMVA = historicalTransactionSource.getHistoricalTransactionsMVA().get(i);
+            HistoricalTransactionTO ht = historicalTransactionSource.getHistoricalTransactions().get(i);
+            long timeInMs = ht.getTimeInMS() < 1? counter++ : ht.getTimeInMS();
+            ht = new HistoricalTransactionTO(timeInMs, ht.getTransactionPrice(), ht.getTransactionPriceMVA());
+
+            double exchangeRate = ht.getTransactionPrice();
             // Simulate that something new trade came up
-            exchange.keepOnlyThisHistoricalTransaction(new HistoricalTransactionTO(counter++, exchangeRate, exchangeRateMVA));
+            exchange.keepOnlyThisHistoricalTransaction(ht);
 
             // Update statistics
             if(counter <= 1) {

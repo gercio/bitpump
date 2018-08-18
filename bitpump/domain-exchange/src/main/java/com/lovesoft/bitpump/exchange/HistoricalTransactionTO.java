@@ -1,6 +1,6 @@
-package com.lovesoft.bitpump.to;
+package com.lovesoft.bitpump.exchange;
 
-import com.lovesoft.bitpump.calculation.candle.ValueAtTime;
+import com.lovesoft.bitpump.commons.ValueAtTime;
 
 import java.util.Objects;
 
@@ -17,6 +17,10 @@ public class HistoricalTransactionTO implements Comparable<HistoricalTransaction
         this.transactionTimeInMs = transactionTimeInMs;
         this.transactionPrice = transactionPrice;
         this.transactionPriceMVA = transactionPriceMVA;
+    }
+
+    public HistoricalTransactionTO(HistoricalTransactionTO to) {
+        this(to.getTransactionTimeInMs(), to.getTransactionPrice(), to.getTransactionPriceMVA());
     }
 
     public double getTransactionPrice() {
@@ -47,6 +51,10 @@ public class HistoricalTransactionTO implements Comparable<HistoricalTransaction
 
     public double getTransactionPriceMVA() {
         return transactionPriceMVA;
+    }
+
+    public void setTransactionPriceMVA(double transactionPriceMVA) {
+        this.transactionPriceMVA = transactionPriceMVA;
     }
 
     @Override

@@ -1,6 +1,10 @@
 package com.lovesoft.bitpump.simulation;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.commons.BitPumpRuntimeException;
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
+import com.lovesoft.bitpump.exchange.TradeExchangeToSerializer;
+import com.lovesoft.bitpump.simulation.SimulationDataSupport.ChartName.ChartType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,17 +12,58 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.zip.ZipInputStream;
 
 public class SimulationDataSupport {
-    public enum ChartName{chart01, chart02, chart03, chart04, Bitmarket24_01, Bitmarket24_02, Bitmarket24_03, Bitmarket24_04, Bitmarket24_05}
+    public enum ChartName {
+        chart01(ChartType.DOUBLE_STREAM),
+        chart02(ChartType.DOUBLE_STREAM),
+        chart03(ChartType.DOUBLE_STREAM),
+        chart04(ChartType.DOUBLE_STREAM),
+        Bitmarket24_01(ChartType.DOUBLE_STREAM),
+        Bitmarket24_02(ChartType.DOUBLE_STREAM),
+        Bitmarket24_03(ChartType.DOUBLE_STREAM),
+        Bitmarket24_04(ChartType.DOUBLE_STREAM),
+        Bitmarket24_05(ChartType.DOUBLE_STREAM),
+        Bitmarket_2017_09_2018_08(ChartType.TWO_COLUMNS_ZIPPED);
 
-    public List<Double> readChart(ChartName chartName) {
-        InputStream is = getInputStream(chartName);
-        try {
-            return readNumbersFromStream(is);
+        public enum ChartType {DOUBLE_STREAM, TWO_COLUMNS_ZIPPED}
+        private ChartType chartType;
+
+        ChartName(ChartType chartType) {
+            this.chartType = chartType;
+        }
+
+        public ChartType getChartType() {
+            return chartType;
+        }
+    }
+
+    public List<HistoricalTransactionTO> readChart(ChartName chartName) {
+
+        try(InputStream is = getInputStream(chartName)) {
+            if(chartName.getChartType().equals(ChartType.DOUBLE_STREAM)) {
+                return toTradeTO(readNumbersFromStream(is));
+            } else if(chartName.getChartType().equals(ChartType.TWO_COLUMNS_ZIPPED)) {
+                return readHistoricalTransactions(is);
+            } else {
+                throw new BitPumpRuntimeException("Unknown ChartType " + chartName.getChartType());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private List<HistoricalTransactionTO> readHistoricalTransactions(InputStream is) {
+
+        ZipInputStream zipIs = new ZipInputStream(is);
+        List<HistoricalTransactionTO> list = TradeExchangeToSerializer.load(zipIs);
+        return list;
+    }
+
+    private List<HistoricalTransactionTO> toTradeTO(List<Double> doubles) {
+        return doubles.stream().map(d -> new HistoricalTransactionTO(0l, d)).collect(Collectors.toList());
     }
 
     private List<Double> readNumbersFromStream(InputStream is) throws IOException {

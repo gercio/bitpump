@@ -1,6 +1,7 @@
 package com.lovesoft.bitpump.calculation.candle;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.commons.ValueAtTime;
 
 import java.util.ArrayList;
 import java.util.List;

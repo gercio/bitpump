@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.misc.IOUtils;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -21,39 +23,24 @@ import java.util.List;
 public class Downloader {
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
-    private static final String SEPARATOR = "|";
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
     private static final String BITMARKET_PL_TRADES_URL = "https://www.bitmarket.pl/json/BTCPLN/trades.json";
+    private static final int MAX_LOG_SIZE = 100;
 
     void download(Date pastDate, OutputStream outputStream) {
-        List<? extends TradeTO> trades = downloadTrades(pastDate);
+        List<? extends TradeExchangeTO> trades = downloadTrades(pastDate);
         LOG.info("For date " + pastDate + ", there is " + trades.size() + " number of transactions returned.");
-        OutputStreamWriter writer = new OutputStreamWriter( new BufferedOutputStream(outputStream, 10000));
-        trades.forEach( t -> {
-            try {
-                writer.write("" + t.getPrice());
-                writer.write(SEPARATOR);
-                writer.write(DATE_FORMAT.format(t.getDate()));
-                writer.write("\n");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        TradeExchangeToSerializer.save(trades, outputStream);
         LOG.info("All data saved. Finished with success.");
     }
 
-    private List<? extends TradeTO> downloadTrades(Date pastDate) {
+    private List<? extends TradeExchangeTO> downloadTrades(Date pastDate) {
         Preconditions.checkNotNull(pastDate);
         List<ParsingTradeTO> actualTrades = downloadActualTrades();
-        TradeTO actualTrade = actualTrades.get(0);
+        TradeExchangeTO actualTrade = actualTrades.get(0);
         while (actualTrade.getDate().compareTo(pastDate) > 0) {
             actualTrades.addAll(0, downloadTrades(actualTrades.get(0).getTransactionId() - 500));
-            TradeTO prev = actualTrade;
+            TradeExchangeTO prev = actualTrade;
             actualTrade = actualTrades.get(0);
             Preconditions.checkArgument(actualTrade.getTransactionId() < prev.getTransactionId(), " Transaction id in past should be smaller " + actualTrade.getTransactionId() + "  " + prev.getTransactionId());
         }
@@ -66,13 +53,13 @@ public class Downloader {
 
     private List<ParsingTradeTO> downloadTrades(Long transactionID) {
         String body = downHistoricalTrades(transactionID);
-        int last = 1000 > body.length() ? body.length() : 1000;
+        int last = MAX_LOG_SIZE > body.length() ? body.length() : MAX_LOG_SIZE;
         LOG.info("Answer = " + body.substring(0, last - 1));
         return parseTrades(body);
     }
 
     /**
-     * It parse [{"amount":0.04226696,"price":1888.9800,"date":1393869593,"tid":500,"type":"bid"},{"amount":0.07000000,"price":1888.9800,"date":1393869559,"tid":499,"type":"bid"},
+     * It parse [{"amount":0.04226696,"price":1888.9800,"date":1393869593,"tid":500,"type":"bid"},
      *
      * @param body
      * @return
@@ -98,6 +85,9 @@ public class Downloader {
                     parsingTradeTO = new ParsingTradeTO();
                 }
             }
+        }
+        if(!tradeList.isEmpty()) {
+            LOG.info("Found trade " + tradeList.get(0));
         }
         return tradeList;
     }
@@ -139,7 +129,7 @@ public class Downloader {
         }
     }
 
-    private class ParsingTradeTO extends TradeTO {
+    private class ParsingTradeTO extends TradeExchangeTO {
 
         public void setAmount(String amount) {
             Preconditions.checkArgument(this.getAmount() == null);
@@ -155,7 +145,7 @@ public class Downloader {
         public void setDate(String seconds) {
             Preconditions.checkArgument(this.getDate() == null);
             int sec = Integer.parseInt(seconds);
-            super.setDate(new Date((long) sec * 1000l)); // converting from seconds to mseconds
+            super.setDate(toDateFromSeconds(sec)); // converting from seconds to mseconds
         }
 
         public void setTransactionId(String transactionId) {
@@ -195,9 +185,20 @@ public class Downloader {
         }
     }
 
+    public static Date toDateFromSeconds(long sec) {
+        return new Date(sec * 1000l);
+    }
+
+    public static String toDateString(Date date) {
+        if(date == null) {
+            return null;
+        }
+        return DATE_FORMAT.format(date);
+    }
+
     static public void main(String[] args) {
         try {
-            new Downloader().download(DATE_FORMAT.parse("2018-08-10 22:22:22"), new FileOutputStream("downloaded.txt"));
+            new Downloader().download(DATE_FORMAT.parse("2017-09-01 01:00:00"), new FileOutputStream("downloaded.txt"));
         } catch (Exception e) {
             LOG.error("Can't run downloading.", e);
         }

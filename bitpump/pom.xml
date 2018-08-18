@@ -8,9 +8,13 @@
     <artifactId>bitpump</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <url>https://github.com/gercio/bitpump</url>
+    <description>This project is about to create automatic trader for digital money like Bitcoin.</description>
+    <name>BitPump</name>
     <modules>
         <module>domain-calculation</module>
         <module>domain-exchange</module>
+        <module>commons</module>
     </modules>
     <properties>
         <guava.version>24.0-jre</guava.version>
@@ -18,12 +22,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -54,7 +61,6 @@
             <version>1.2.0</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>

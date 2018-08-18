@@ -1,5 +1,6 @@
 package com.lovesoft.bitpump.support;
 
+import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 import com.lovesoft.bitpump.simulation.HistoricalTransactionSource;
 
 import java.util.List;
@@ -14,19 +15,14 @@ public class HistoricalTransactionSourceLimit implements HistoricalTransactionSo
     }
 
     @Override
-    public List<Double> getHistoricalTransactions() {
+    public List<HistoricalTransactionTO> getHistoricalTransactions() {
         return getWithLimit(source.getHistoricalTransactions());
     }
 
-    private List<Double> getWithLimit(List<Double> history) {
+    private List<HistoricalTransactionTO> getWithLimit(List<HistoricalTransactionTO> history) {
         if(history.size() > limitToFirstElements) {
             return history.subList(0, limitToFirstElements);
         }
         return history;
-    }
-
-    @Override
-    public List<Double> getHistoricalTransactionsMVA() {
-        return getWithLimit(source.getHistoricalTransactionsMVA());
     }
 }

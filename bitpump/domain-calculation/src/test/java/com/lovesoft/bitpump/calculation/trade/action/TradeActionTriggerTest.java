@@ -114,6 +114,13 @@ public class TradeActionTriggerTest {
         tradeActionTrigger.count(TradeAction.BUY);
         Assertions.assertTrue(tradeActionTrigger.checkBuyTriggeredAndReset());
         Assertions.assertFalse(tradeActionTrigger.checkSellTriggeredAndReset());
+
+        tradeActionTrigger.count(TradeAction.SELL);
+        tradeActionTrigger.count(TradeAction.BUY);
+        tradeActionTrigger.count(TradeAction.BUY);
+        tradeActionTrigger.count(TradeAction.BUY);
+        tradeActionTrigger.count(TradeAction.BUY);
+        Assertions.assertTrue(tradeActionTrigger.checkBuyTriggeredAndReset());
     }
 
 }

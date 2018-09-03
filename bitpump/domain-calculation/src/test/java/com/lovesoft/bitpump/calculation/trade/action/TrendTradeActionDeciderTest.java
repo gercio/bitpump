@@ -15,10 +15,15 @@ public class TrendTradeActionDeciderTest {
 
     @BeforeEach
     void beforeEach() {
+        init(1);
+    }
 
+    void init(int triggerCount) {
         TrendTradeActionDeciderParameters par = new TrendTradeActionDeciderParameters();
         par.setPercentageDownSell(5);
         par.setPercentageUpBuy(5);
+        par.setTriggerTargetBuyCount(triggerCount);
+        par.setTriggerTargetSellCount(triggerCount);
         trendTradeActionDecider = new TradeActionDeciderBuilder().build(par);
     }
 
@@ -26,6 +31,16 @@ public class TrendTradeActionDeciderTest {
     void shouldBuyWhenPriceIsGoingMoreThan5PercentUp() {
         // Price is going up more then 5% -> buy it!
         exchangeData = new ExchangeDataTOBuilder().build(95d, 96d, 97d, 98d, 99d, 100d);
+        TradeAction ta = trendTradeActionDecider.calculateTradeAction(exchangeData).get();
+
+        assertNotNull(ta);
+        assertEquals(TradeAction.BUY, ta);
+    }
+
+    @Test
+    void shouldBuyWhenPriceIsGoingMoreThan5PercentUpAndTriggerIs2() {
+        init(2);
+        exchangeData = new ExchangeDataTOBuilder().build(95d, 96d, 97d, 98d, 99d, 100d, 101d);
         TradeAction ta = trendTradeActionDecider.calculateTradeAction(exchangeData).get();
 
         assertNotNull(ta);
@@ -45,8 +60,17 @@ public class TrendTradeActionDeciderTest {
     }
 
     @Test
-    void shouldSellWhenPriceIsGoingDownMoreThan5PercentUp() {
+    void shouldSellWhenPriceIsGoingDownMoreThan5Percent() {
         exchangeData = new ExchangeDataTOBuilder().build(100d, 99d, 98d, 97d, 96d, 95d);
+        TradeAction ta = trendTradeActionDecider.calculateTradeAction(exchangeData).get();
+
+        assertNotNull(ta);
+        assertEquals(TradeAction.SELL, ta);
+    }
+
+    @Test
+    void shouldSellWhenPriceRiseAndThenIsGoingDownMoreThan5Percent() {
+        exchangeData = new ExchangeDataTOBuilder().build(95d, 96d, 97d, 98d, 99d, 100d, 101d, 99d, 98d, 97d, 96d, 95d, 94d);
         TradeAction ta = trendTradeActionDecider.calculateTradeAction(exchangeData).get();
 
         assertNotNull(ta);

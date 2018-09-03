@@ -26,12 +26,7 @@ public class TradeWalletStatistics implements WithLog {
     }
 
     private double calculate(TradeWalletTO walletTO) {
-        //logDebug(LOG, "Wallet stuff: {}. Money after sell of DC: {}.", walletTO.toString(), exchange.calculateMoneyFromDC(walletTO.getDigitalCurrencyAmount()));
-//        if (calculateOnlyWithDC) {
-//            return walletTO.getDigitalCurrencyAmount();
-//        } else {
-            return exchange.calculateMoneyFromDC(walletTO.getDigitalCurrencyAmount()) + walletTO.getMoneyAmount();
-//        }
+        return exchange.calculateMoneyFromDC(walletTO.getDigitalCurrencyAmount()) + walletTO.getMoneyAmount();
     }
 
     public synchronized void updateWalletTO(TradeWalletTO last) {

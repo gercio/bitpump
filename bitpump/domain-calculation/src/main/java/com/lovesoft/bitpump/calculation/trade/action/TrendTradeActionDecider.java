@@ -49,16 +49,22 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
 
     @Override
     public Optional<TradeAction> calculateTradeAction(ExchangeDataTO exchangeData) {
-        transactions.addAll(exchangeData.getHistoricalTransactions());
-        if(transactions.isEmpty()) {
+        if(transactions.isEmpty() && exchangeData.getHistoricalTransactions().isEmpty()) {
             logDebug(LOG, "No historical transactions. No trade Action.");
             return Optional.empty();
         }
 
-        List<HistoricalTransactionTO> reversedHistory = reverseHistory();
-        Optional<TradeAction> tradeAction = Optional.ofNullable(checkTrendGoesUp(reversedHistory).orElseGet(() -> checkTrendGoesDown(reversedHistory)));
+        Optional<TradeAction> tradeAction = Optional.empty();
+        for(HistoricalTransactionTO historicalTransaction : exchangeData.getHistoricalTransactions()) {
+            transactions.add(historicalTransaction);
+            tradeAction = Optional.ofNullable(calculateTradeAction(reverseHistory()).orElse(tradeAction.orElse(null)));
+        }
         OptionalConsumer.of(tradeAction).ifPresent(this::afterTradeActionFinding);
         return tradeAction;
+    }
+
+    private Optional<TradeAction> calculateTradeAction(List<HistoricalTransactionTO> reversedHistory) {
+        return Optional.ofNullable(checkTrendGoesUp(reversedHistory).orElseGet(() -> checkTrendGoesDown(reversedHistory)));
     }
 
     private void afterTradeActionFinding(TradeAction tradeAction) {
@@ -93,7 +99,7 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
         double lastPrice = reversedHistory.get(0).getTransactionPriceMVA();
         double lowestPrice = getLowestPrice(reversedHistory);
         double calculatedPercentage = MathSupport.calculatePercentageOfXisY(lastPrice, lowestPrice);
-        logDebug(LOG,"Found lowest price {} and last price {}. Transaction number is {}. Calculated price up percent = {}", lowestPrice, lastPrice, transactions.size(), 100 - calculatedPercentage);
+        logDebug(LOG,"Found lowest price {} and last price {}. Transactions number is {}. Calculated price up percent = {}", lowestPrice, lastPrice, transactions.size(), 100 - calculatedPercentage);
         if(calculatedPercentage <= 100 - percentageUpBuy) {
             // Price goes up for at least percentageUpBuy, so buy it!
             // Check the counter

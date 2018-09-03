@@ -66,9 +66,10 @@ public class TraderSimulation implements Runnable, WithLog {
             tradeWallet.setMoneyAmount(100);
         }
 
-        for(int i = 0 ; i < historicalTransactionSource.getHistoricalTransactions().size(); ++i) {
+        for(int i = 0 ; i < historicalTransactionSource.getHistoricalTransactions().size(); ++i, ++counter) {
+
             HistoricalTransactionTO ht = historicalTransactionSource.getHistoricalTransactions().get(i);
-            long timeInMs = ht.getTimeInMS() < 1? counter++ : ht.getTimeInMS();
+            long timeInMs = ht.getTimeInMS() < 1? counter : ht.getTimeInMS();
             ht = new HistoricalTransactionTO(timeInMs, ht.getTransactionPrice(), ht.getTransactionPriceMVA());
 
             double exchangeRate = ht.getTransactionPrice();
@@ -91,7 +92,7 @@ public class TraderSimulation implements Runnable, WithLog {
         tradeWalletStatistics.updateWalletTO(tradeWallet.getTraderWalletTO());
         statisticsConsumer.ifPresent(c -> c.accept(tradeWalletStatistics));
         if(printSummary) {
-            logInfo(LOG, "Result for {} is  percentage = {}", parameters.toString(), getTradeWalletStatistics().calculateAssetChangeInPercentage() );
+            logInfo(LOG, "Result for {} is  percentage = {}", parameters, getTradeWalletStatistics().calculateAssetChangeInPercentage() );
         }
     }
 

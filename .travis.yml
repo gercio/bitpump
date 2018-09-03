@@ -1,3 +1,2 @@
 language: java
 before_script: cd bitpump
-install: ./install-dependencies.sh

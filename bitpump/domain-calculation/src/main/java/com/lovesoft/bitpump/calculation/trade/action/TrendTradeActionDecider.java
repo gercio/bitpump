@@ -38,11 +38,11 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
         logDebug(LOG, "percentageUpBuy = {}", percentageUpBuy);
     }
 
-    public void setTargetBuyCount(int targetBuyCount) {
+    void setTargetBuyCount(int targetBuyCount) {
         trigger.setTargetBuyCount(targetBuyCount);
     }
 
-    public void setTargetSellCount(int targetSellCount) {
+    void setTargetSellCount(int targetSellCount) {
         trigger.setTargetSellCount(targetSellCount);
     }
 
@@ -59,7 +59,7 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
             transactions.add(historicalTransaction);
             tradeAction = Optional.ofNullable(calculateTradeAction(reverseHistory()).orElse(tradeAction.orElse(null)));
         }
-        OptionalConsumer.of(tradeAction).ifPresent(this::afterTradeActionFinding);
+        OptionalConsumer.of(tradeAction).ifPresent((ta) -> afterTradeActionFinding());
         return tradeAction;
     }
 
@@ -67,14 +67,13 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
         return Optional.ofNullable(checkTrendGoesUp(reversedHistory).orElseGet(() -> checkTrendGoesDown(reversedHistory)));
     }
 
-    private void afterTradeActionFinding(TradeAction tradeAction) {
+    private void afterTradeActionFinding() {
         // Clear history - we do not need to keep it back, since trade action was made
         transactions.clearAndTakeOnlyNewest();
     }
 
     private List<HistoricalTransactionTO> reverseHistory() {
-        List<HistoricalTransactionTO> reversedHistory = new ArrayList<>();
-        reversedHistory.addAll(transactions.getReadOnlyTransactionList());
+        List<HistoricalTransactionTO> reversedHistory = new ArrayList<>(transactions.getReadOnlyTransactionList());
         Collections.reverse(reversedHistory);
         return reversedHistory;
     }
@@ -110,8 +109,6 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
         }
         return Optional.empty();
     }
-
-
 
     private double getHighestPrice(List<HistoricalTransactionTO> reversedHistory) {
         double highest = -1.0;

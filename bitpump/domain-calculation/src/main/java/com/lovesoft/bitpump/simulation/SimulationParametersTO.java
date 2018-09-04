@@ -15,7 +15,6 @@ public class SimulationParametersTO {
     private double historicalBufferTrimSizePercentage;
     private double digitalCurrencyAmount;
     private double moneyAmount;
-    private boolean calculateStatisticsOnlyForDX;
 
     public double getDoubleStep() {
         return doubleStep;
@@ -121,7 +120,6 @@ public class SimulationParametersTO {
                 ", historicalBufferTrimSizePercentage=" + historicalBufferTrimSizePercentage +
                 ", digitalCurrencyAmount=" + digitalCurrencyAmount +
                 ", moneyAmount=" + moneyAmount +
-                ", calculateStatisticsOnlyForDX=" + calculateStatisticsOnlyForDX +
                 '}';
     }
 
@@ -139,13 +137,5 @@ public class SimulationParametersTO {
 
     public double getMoneyAmount() {
         return moneyAmount;
-    }
-
-    public boolean getCalculateStatisticsOnlyForDX() {
-        return calculateStatisticsOnlyForDX;
-    }
-
-    public void setCalculateStatisticsOnlyForDX(boolean calculateStatisticsOnlyForDX) {
-        this.calculateStatisticsOnlyForDX = calculateStatisticsOnlyForDX;
     }
 }

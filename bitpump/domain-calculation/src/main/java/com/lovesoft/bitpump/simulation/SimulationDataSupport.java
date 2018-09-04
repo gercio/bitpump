@@ -17,26 +17,32 @@ import java.util.zip.ZipInputStream;
 
 public class SimulationDataSupport {
     public enum ChartName {
-        chart01(ChartType.DOUBLE_STREAM),
-        chart02(ChartType.DOUBLE_STREAM),
-        chart03(ChartType.DOUBLE_STREAM),
-        chart04(ChartType.DOUBLE_STREAM),
-        Bitmarket24_01(ChartType.DOUBLE_STREAM),
-        Bitmarket24_02(ChartType.DOUBLE_STREAM),
-        Bitmarket24_03(ChartType.DOUBLE_STREAM),
-        Bitmarket24_04(ChartType.DOUBLE_STREAM),
-        Bitmarket24_05(ChartType.DOUBLE_STREAM),
-        Bitmarket_2017_09_2018_08(ChartType.TWO_COLUMNS_ZIPPED);
+        CHART_01(ChartType.DOUBLE_STREAM, "chart01.txt"),
+        CHART_02(ChartType.DOUBLE_STREAM, "chart02.txt"),
+        CHART_03(ChartType.DOUBLE_STREAM, "chart03.txt"),
+        CHART_04(ChartType.DOUBLE_STREAM, "chart04.txt"),
+        BITMARKET24_01(ChartType.DOUBLE_STREAM, "Bitmarket24_01.txt"),
+        BITMARKET24_02(ChartType.DOUBLE_STREAM, "Bitmarket24_02.txt"),
+        BITMARKET24_03(ChartType.DOUBLE_STREAM, "Bitmarket24_03.txt"),
+        BITMARKET24_04(ChartType.DOUBLE_STREAM, "Bitmarket24_04.txt"),
+        BITMARKET24_05(ChartType.DOUBLE_STREAM, "Bitmarket24_05.txt"),
+        BITMARKET_2017_09_2018_08(ChartType.TWO_COLUMNS_ZIPPED, "Not defined yet.");
 
         public enum ChartType {DOUBLE_STREAM, TWO_COLUMNS_ZIPPED}
         private ChartType chartType;
+        private String fileName;
 
-        ChartName(ChartType chartType) {
+        ChartName(ChartType chartType, String fileName) {
             this.chartType = chartType;
+            this.fileName = fileName;
         }
 
         public ChartType getChartType() {
             return chartType;
+        }
+
+        public String getFileName() {
+            return "charts/" + fileName;
         }
     }
 
@@ -82,7 +88,7 @@ public class SimulationDataSupport {
     }
 
     private InputStream getInputStream(ChartName chartName) {
-        String fileName = "charts/" + chartName.name() + ".txt";
+        String fileName = chartName.getFileName();
         InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
         Preconditions.checkNotNull(is, "Can't read file " + fileName);
         return is;

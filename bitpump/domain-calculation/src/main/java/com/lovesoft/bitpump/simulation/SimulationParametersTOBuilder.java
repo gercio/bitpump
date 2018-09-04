@@ -104,7 +104,6 @@ public final class SimulationParametersTOBuilder {
         simulationParametersTO.setHistoricalBufferTrimSizePercentage(historicalBufferTrimSizePercentage);
         simulationParametersTO.setMoneyAmount(moneyAmount);
         simulationParametersTO.setDigitalCurrencyAmount(digitalCurrencyAmount);
-        simulationParametersTO.setCalculateStatisticsOnlyForDX(calculateStatisticsOnlyForDX);
         return simulationParametersTO;
     }
 }

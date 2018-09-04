@@ -1,6 +1,7 @@
 package com.lovesoft.bitpump.calculation.trade.action;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.commons.BitPumpRuntimeException;
 import com.lovesoft.bitpump.commons.WithLog;
 import com.lovesoft.bitpump.to.TradeAction;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ public class TradeActionTrigger implements WithLog {
     private int targetSellCount;
     private int count;
     private Optional<TradeAction> lastAction = Optional.empty();
-    private final Logger LOG = LoggerFactory.getLogger(TradeActionTrigger.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TradeActionTrigger.class);
 
     public TradeActionTrigger(int targetBuyCount) {
         setTargetBuyCount(targetBuyCount);
@@ -50,7 +51,7 @@ public class TradeActionTrigger implements WithLog {
                 count = 0;
             }
             return isTriggered;
-        }).get();
+        }).orElseThrow(() -> new BitPumpRuntimeException("Optional is empty, can't find result."));
     }
 
     public void setTargetBuyCount(int targetBuyCount) {

@@ -1,9 +1,9 @@
 package com.lovesoft.bitpump.exchange;
 
 import com.google.common.base.Preconditions;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.IOUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,13 +23,15 @@ import java.util.List;
 public class Downloader {
 
     private static final Logger LOG = LoggerFactory.getLogger(Downloader.class);
-    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
     private static final String BITMARKET_PL_TRADES_URL = "https://www.bitmarket.pl/json/BTCPLN/trades.json";
     private static final int MAX_LOG_SIZE = 100;
+    private static final String FILE_NAME = "downloaded.txt";
+    private static final String START_DATE = "2017-08-01 01:00:00";
+    private static final String ENCODING = "UTF-8";
 
     void download(Date pastDate, OutputStream outputStream) {
         List<? extends TradeExchangeTO> trades = downloadTrades(pastDate);
-        LOG.info("For date " + pastDate + ", there is " + trades.size() + " number of transactions returned.");
+        LOG.info("For date {} , there is {} numbers of transactions returned.", pastDate,  trades.size());
         TradeExchangeToSerializer.save(trades, outputStream);
         LOG.info("All data saved. Finished with success.");
     }
@@ -54,7 +56,7 @@ public class Downloader {
     private List<ParsingTradeTO> downloadTrades(Long transactionID) {
         String body = downHistoricalTrades(transactionID);
         int last = MAX_LOG_SIZE > body.length() ? body.length() : MAX_LOG_SIZE;
-        LOG.info("Answer = " + body.substring(0, last - 1));
+        LOG.info("Answer = {}...", body.substring(0, last - 1));
         return parseTrades(body);
     }
 
@@ -87,7 +89,7 @@ public class Downloader {
             }
         }
         if(!tradeList.isEmpty()) {
-            LOG.info("Found trade " + tradeList.get(0));
+            LOG.info("Found trade {} ", tradeList.get(0));
         }
         return tradeList;
     }
@@ -115,13 +117,13 @@ public class Downloader {
             } else {
                 url = new URL(BITMARKET_PL_TRADES_URL);
             }
-            LOG.info("URL = " + url);
+            LOG.info("URL = {}", url);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            String body = new String(IOUtils.readFully(con.getInputStream(), Integer.MAX_VALUE, true));
+            String body = new String(IOUtils.toString(con.getInputStream(), ENCODING));
             int status = con.getResponseCode();
             if (status != 200) {
-                LOG.error("HTTP error code " + status);
+                LOG.error("HTTP error code {}", status);
             }
             return body;
         } catch (IOException e) {
@@ -153,6 +155,7 @@ public class Downloader {
             super.setTransactionId(Long.parseLong(transactionId));
         }
 
+        @Override
         public void setType(String type) {
             Preconditions.checkArgument(this.getType() == null);
             super.setType(type);
@@ -190,17 +193,18 @@ public class Downloader {
     }
 
     public static String toDateString(Date date) {
-        if(date == null) {
-            return null;
-        }
-        return DATE_FORMAT.format(date);
+       return  createDateFormat().format(date);
     }
 
-    static public void main(String[] args) {
+    public static void main(String[] args) {
         try {
-            new Downloader().download(DATE_FORMAT.parse("2017-09-01 01:00:00"), new FileOutputStream("downloaded.txt"));
+            new Downloader().download(createDateFormat().parse(START_DATE), new FileOutputStream(FILE_NAME));
         } catch (Exception e) {
             LOG.error("Can't run downloading.", e);
         }
+    }
+
+    public static DateFormat createDateFormat() {
+        return new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
     }
 }

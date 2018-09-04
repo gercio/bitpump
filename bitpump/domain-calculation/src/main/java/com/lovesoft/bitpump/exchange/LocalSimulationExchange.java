@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class LocalSimulationExchange implements Exchange, WithLog {
-    private static Logger LOG = LoggerFactory.getLogger(LocalSimulationExchange.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LocalSimulationExchange.class);
     private List<HistoricalTransactionTO> historicalTransactions;
     private TradeWallet tradeWallet;
 

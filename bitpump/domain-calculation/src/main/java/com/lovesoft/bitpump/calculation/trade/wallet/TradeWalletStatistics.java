@@ -13,7 +13,6 @@ public class TradeWalletStatistics implements WithLog {
     private double lastAssetValue;
     private Exchange exchange;
     private Optional<TradeWalletTO> lastWallet = Optional.empty();
-    private boolean calculateOnlyWithDC = false;
 
     public TradeWalletStatistics(Exchange exchange) {
         Preconditions.checkNotNull(exchange);
@@ -43,12 +42,5 @@ public class TradeWalletStatistics implements WithLog {
 
     public Optional<TradeWalletTO> getLastWallet() {
         return lastWallet;
-    }
-
-    /**
-     * Use only digital currency to calculate statistics
-     */
-    public void calculateOnlyWithDC() {
-        this.calculateOnlyWithDC = true;
     }
 }

@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class SimpleTrader implements Trader, WithLog {
-    private Logger LOG = LoggerFactory.getLogger(SimpleTrader.class);
+    private static Logger LOG = LoggerFactory.getLogger(SimpleTrader.class);
 
     private Exchange exchange;
     private TradeActionDecider tradeActionDecider;
@@ -40,8 +40,6 @@ public class SimpleTrader implements Trader, WithLog {
     public void doTrades() {
         ExchangeDataTO exchangeData = exchange.getExchangeData();
         tradeData.setSellExchangeRate(exchangeData.getSellExchangeRate());
-
-
         if(tradeWallet.isEmpty()) {
             logWarn(LOG, "Wallet is empty - no trade will be made! Please top up your wallet :)");
         } else {
@@ -57,7 +55,7 @@ public class SimpleTrader implements Trader, WithLog {
     }
 
     private boolean isStopLoose() {
-        return OptionalConsumerBoolean.of(stopLoose).ifPresent(sl -> sl.stopLoose()).ifNotPresent(() -> false).getBoolean();
+        return OptionalConsumerBoolean.of(stopLoose).ifPresent(StopLoose::stopLoose).ifNotPresent(() -> false).getBoolean();
     }
 
     @Override
@@ -67,10 +65,12 @@ public class SimpleTrader implements Trader, WithLog {
 
     private void letsTrade(TradeAction ta, ExchangeDataTO exchangeData) {
         tradeData.setSellExchangeRate(exchangeData.getSellExchangeRate());
-        if(tradeData.getLastAction().isPresent() && tradeData.getLastAction().get().equals(ta)) {
-            logDebug(LOG, "Can't do {} right now (this was last action)", ta);
-            return;
-        }
+        tradeData.getLastAction().ifPresent(tradeAction -> {
+            if (tradeAction.equals(ta)) {
+                logDebug(LOG, "Can't do {} right now (this was last action)", ta);
+                return;
+            }
+        });
         tradeAmountDecider.setTradeWallet(tradeWallet.getTraderWalletTO());
         tradeAmountDecider.calculateAmount(ta).ifPresent(amount -> {
             if(ta.equals(TradeAction.SELL)) {

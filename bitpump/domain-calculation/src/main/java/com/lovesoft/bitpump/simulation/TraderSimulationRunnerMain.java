@@ -6,7 +6,7 @@ public class TraderSimulationRunnerMain {
 
     public static void main(String[] arg) {
         SimulationHistoricalTransaction simulationHistoricalTransaction = new SimulationHistoricalTransaction(20);
-        simulationHistoricalTransaction.setChartName(ChartName.Bitmarket24_04);
+        simulationHistoricalTransaction.setChartName(ChartName.BITMARKET24_04);
         new TraderSimulationRunner(simulationHistoricalTransaction, getParameters()).execute();
     }
 

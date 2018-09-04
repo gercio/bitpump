@@ -59,11 +59,11 @@ public class HistoricalTransactionTO implements Comparable<HistoricalTransaction
 
     @Override
     public long getTimeInMS() {
-        return transactionTimeInMs;
+        return getTransactionTimeInMs();
     }
 
     @Override
     public double getValue() {
-        return transactionPrice;
+        return getTransactionPrice();
     }
 }

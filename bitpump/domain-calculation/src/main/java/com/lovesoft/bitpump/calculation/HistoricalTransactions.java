@@ -1,5 +1,6 @@
 package com.lovesoft.bitpump.calculation;
 
+import com.google.common.base.Preconditions;
 import com.lovesoft.bitpump.exchange.HistoricalTransactionTO;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class HistoricalTransactions {
     private Long lastTransactionTime;
 
     public HistoricalTransactions(long maximumTransactions) {
-        assert maximumTransactions > 0;
+        Preconditions.checkArgument(maximumTransactions > 0, "MaximumTransactions should be grater than 0. MaximumTransactions = " + maximumTransactions);
         this.maximumTransactions = maximumTransactions;
     }
 
@@ -22,21 +23,12 @@ public class HistoricalTransactions {
     }
 
     public List<HistoricalTransactionTO> getReadOnlyTransactionList() {
-        // Keep this object in charge of his list of transaction.
-        //        return Collections.unmodifiableList(transactions.stream().collect(Collectors.toList()));
         List<HistoricalTransactionTO> list = new ArrayList<>(transactions.size());
         list.addAll(transactions);
         return list;
     }
 
-    public void addAll(List<HistoricalTransactionTO> historicalTransactions) {
-        for(HistoricalTransactionTO to : historicalTransactions) {
-            add(to);
-        }
-    }
-
     public void add(HistoricalTransactionTO historicalTransaction) {
-        //if(!isYoungEnough(historicalTransaction) || transactions.contains(historicalTransaction)) {
         if(set.contains(historicalTransaction) || !isYoungEnough(historicalTransaction)) {
             return;
         }

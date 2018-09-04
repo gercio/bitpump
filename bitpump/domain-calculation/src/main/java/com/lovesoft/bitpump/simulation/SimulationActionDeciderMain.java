@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
  * Created 07.03.2018 18:03.
  */
 public class SimulationActionDeciderMain implements WithLog{
-    private TraderSimulation simulation;
     private SimulationHistoricalTransaction history = new SimulationHistoricalTransaction(20);
     private static final Logger LOG = LoggerFactory.getLogger(SimulationActionDeciderMain.class);
 
@@ -21,7 +20,6 @@ public class SimulationActionDeciderMain implements WithLog{
         parameters.setMaximumLoosePercentage(5);
         parameters.setStartMoneyAmount(0);
         parameters.setStartDigitalCurrencyAmount(1);
-        parameters.setCalculateStatisticsOnlyForDX(true);
         SimulationActionDeciderParameters param = new SimulationActionDeciderParameters();
         param.setNumberOfHistoricalTransactionsToRunSimulation(300);
 
@@ -37,15 +35,13 @@ public class SimulationActionDeciderMain implements WithLog{
         simParam.setTriggerTargetCountFrom(2);
         simParam.setTriggerTargetCountTo(30);
         simParam.setHistoricalBufferTrimSizePercentage(55);
-        simParam.setCalculateStatisticsOnlyForDX(false);
-
 
         param.setParameters(simParam);
         parameters.setTrendParameters(param);
         logInfo(LOG, "Starting with parameters {} ", parameters);
 
-        history.setChartName(ChartName.Bitmarket24_05);
-        simulation = new TraderSimulation(parameters);
+        history.setChartName(ChartName.BITMARKET24_05);
+        TraderSimulation simulation = new TraderSimulation(parameters);
         param.setWalletToSupplier(simulation.getWalletTOSupplier());
         simulation.setPrintSummary(true);
         Thread t = new Thread(simulation);
@@ -55,7 +51,8 @@ public class SimulationActionDeciderMain implements WithLog{
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+               logError(LOG, "Interrupted sleeping." , e);
+               throw new RuntimeException(e);
             }
             logInfo(LOG, "Current wallet statistics earnings -> {} with wallet {} with sell exchange rate {} ", simulation.getTradeWalletStatistics().calculateAssetChangeInPercentage(), simulation.getTradeWalletStatistics().getLastWallet().orElse(null),  simulation.getExchange().getExchangeData().getSellExchangeRate());
         }

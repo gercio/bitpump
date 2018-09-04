@@ -15,7 +15,7 @@ import java.util.Optional;
  * Always sells or buy for maximum possible amounts.
  */
 public class MaximumTradeAmountDecider implements TradeAmountDecider, WithLog {
-    private static Logger LOG = LoggerFactory.getLogger(MaximumTradeAmountDecider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MaximumTradeAmountDecider.class);
     private TradeWalletTO tradeWallet;
 
     protected MaximumTradeAmountDecider() {

@@ -8,7 +8,7 @@ public class TraderSimulationRunnerTest {
     @Test
     public void simulationShouldNotThrowAnyException() {
         SimulationHistoricalTransaction history = new SimulationHistoricalTransaction(1);
-        history.setChartName(ChartName.chart01);
+        history.setChartName(ChartName.CHART_01);
         SimulationParametersTO parameters = SimulationParametersTOBuilder.aSimulationParametersTO()
                 .withDoubleStep(1)
                 .withMaximumLoosePercentageFrom(1)

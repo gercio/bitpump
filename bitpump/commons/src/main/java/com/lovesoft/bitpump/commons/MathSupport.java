@@ -9,6 +9,11 @@ import com.google.common.base.Preconditions;
  */
 
 public class MathSupport {
+
+	private MathSupport () {
+		// Well, you know why this fella is a private one?
+	}
+
 	public static double calculatePercentageOfXisY(double x, double y) {
 		Preconditions.checkArgument(isNotZero(x));
 		return (y * 100.0d) / x;

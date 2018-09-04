@@ -60,6 +60,7 @@ public class SimulationActionDecider implements TradeActionDecider, WithLog {
 
         // Create new
         // It could be better option to just update TradeActionDecider parameters instead of creating it from scratch every time.
+        Preconditions.checkArgument(bestParameters.isPresent(), "Looks like best parameters where not calculated.");
         tradeActionDecider = new TrendActionDeciderBuilder().build((TrendTradeActionDeciderParameters) bestParameters.get().getTrendParameters());
     }
 

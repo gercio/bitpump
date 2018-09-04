@@ -22,7 +22,7 @@ import java.util.Optional;
  *
  */
 public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
-    private static Logger LOG = LoggerFactory.getLogger(TrendTradeActionDecider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TrendTradeActionDecider.class);
     private double percentageUpBuy;
     private double percentageDownSell;
     private HistoricalTransactions transactions;
@@ -59,7 +59,7 @@ public class TrendTradeActionDecider implements TradeActionDecider, WithLog {
             transactions.add(historicalTransaction);
             tradeAction = Optional.ofNullable(calculateTradeAction(reverseHistory()).orElse(tradeAction.orElse(null)));
         }
-        OptionalConsumer.of(tradeAction).ifPresent((ta) -> afterTradeActionFinding());
+        OptionalConsumer.of(tradeAction).ifPresent(ta -> afterTradeActionFinding());
         return tradeAction;
     }
 

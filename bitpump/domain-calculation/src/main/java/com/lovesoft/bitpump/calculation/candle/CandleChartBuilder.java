@@ -23,6 +23,7 @@ public class CandleChartBuilder {
                 candleValue = new CandleValue(value, value, value, value);
                 list.add(candleValue);
             }
+            Preconditions.checkArgument(candleValue != null, "candleValue should not be null");
             candleValue.setMaxIfBigger(value);
             candleValue.setMinIfLower(value);
             candleValue.setClose(value);

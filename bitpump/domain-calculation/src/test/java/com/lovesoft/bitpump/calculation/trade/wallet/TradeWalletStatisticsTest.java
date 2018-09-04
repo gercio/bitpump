@@ -43,14 +43,6 @@ class TradeWalletStatisticsTest {
         assertEquals(100, tradeWalletStatistics.calculateAssetChangeInPercentage());
     }
 
-//    @Test// This functionality is not implemented
-    public void testCalculateWithDigitalCurrency() {
-        tradeWalletStatistics.calculateOnlyWithDC();
-        start(100, 1);
-        tradeWalletStatistics.updateWalletTO(new TradeWalletTO(10, 2));
-        assertEquals(100, tradeWalletStatistics.calculateAssetChangeInPercentage());
-    }
-
     private void start(double moneyAmount, double dcAmount) {
         tradeWalletStatistics.start(new TradeWalletTO(moneyAmount, dcAmount));
     }

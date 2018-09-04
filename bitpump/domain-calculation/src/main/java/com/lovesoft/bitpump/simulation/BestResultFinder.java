@@ -15,18 +15,18 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class BestResultFinder implements WithLog {
     private SortedMap<Double, ParametersTO> sortedResult = Collections.synchronizedSortedMap(new TreeMap<>());
-    private final static Logger LOG = LoggerFactory.getLogger(BestResultFinder.class);
-    private final double NO_RESULT = -999999991; // Probably this can be removed
-    private final long MAX_RESULTS;
+    private static final Logger LOG = LoggerFactory.getLogger(BestResultFinder.class);
+    private static final double NO_RESULT = -999999991;
+    private final long maxResults;
     private AtomicDouble bestResultPercentage = new AtomicDouble(NO_RESULT);
     private AtomicReference<ParametersTO> bestParameters = new AtomicReference<>();
 
     public BestResultFinder() {
-        MAX_RESULTS = 100;
+        maxResults = 100;
     }
 
     public BestResultFinder(long maximumResults) {
-        MAX_RESULTS = maximumResults;
+        maxResults = maximumResults;
     }
 
     public synchronized void findBestResult(TradeWalletStatistics st, ParametersTO simulationParameters) {
@@ -41,7 +41,7 @@ public class BestResultFinder implements WithLog {
             bestParameters.set(simulationParameters);
         }
         sortedResult.put(percentage, simulationParameters);
-        if(sortedResult.size() > MAX_RESULTS) {
+        if(sortedResult.size() > maxResults) {
             // Just remove most old result from map - to not kill memory!
             sortedResult.remove(sortedResult.firstKey());
         }
@@ -60,7 +60,10 @@ public class BestResultFinder implements WithLog {
 
 
     public String getResults() {
-        return  OptionalConsumerWithResult.of(getBestResult(), String.class).ifPresent(p -> "--> Found best result for parameters " + p).ifNotPresent( () -> "No result").getResult().get();
+        return OptionalConsumerWithResult.of(getBestResult(), String.class)
+                .ifPresent(p -> "--> Found best result for parameters " + p)
+                .ifNotPresent(() -> "No result").getResult()
+                .orElse(null);
     }
 
     public Optional<ParametersTO> getBestResult() {

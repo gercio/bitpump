@@ -37,7 +37,7 @@ public class TraderSimulationTest {
 
     @Test
     public void testChart01() {
-        doTrade(ChartName.chart01);
+        doTrade(ChartName.CHART_01);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() > 5, " To low earnings % " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 
@@ -47,19 +47,19 @@ public class TraderSimulationTest {
 
     @Test
     public void testChart02() {
-        doTrade(ChartName.chart02);
+        doTrade(ChartName.CHART_02);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() > 10, " To low earnings % " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 
     @Test
     public void testChart03() {
-        doTrade(ChartName.chart03);
+        doTrade(ChartName.CHART_03);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 0, " You should NOT loos any money on that test " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 
     @Test
     public void testChart04() {
-        doTrade(ChartName.chart04);
+        doTrade(ChartName.CHART_04);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 0.85, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 
@@ -67,7 +67,7 @@ public class TraderSimulationTest {
     public void testBitmarket24_01() {
         //Best result = 11,35 for parameters ParametersTO{percentageBuy=0.7, percentageSel=0.1, triggerTargetBuyCount=6, triggerTargetSellCount=8, maximumLoosePercentage=3.200000000000001}
         initializeTest(0.85, 0.35, 5, 5.0);
-        doTrade(ChartName.Bitmarket24_01);
+        doTrade(ChartName.BITMARKET24_01);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 0.85, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 
@@ -77,7 +77,7 @@ public class TraderSimulationTest {
         //--> Found best result 11.468182694495184 %  for parameters ParametersTO{percentageBuy=0.30000000000000004, percentageSel=0.30000000000000004, triggerTargetBuyCount=3, triggerTargetSellCount=4, maximumLoosePercentage=7.0}
 
         initializeTest(0.1, 0.35, 6, 5.0);
-        doTrade(ChartName.Bitmarket24_02);
+        doTrade(ChartName.BITMARKET24_02);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 8, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 
@@ -89,7 +89,7 @@ public class TraderSimulationTest {
         //New best result  18.74830108703732 %  for parameters ParametersTO{percentageBuy=0.6, percentageSel=0.4, triggerTargetCount=8, maximumLoosePercentage=3.100000000000001}
         //Best result = 18,98 for parameters ParametersTO{percentageBuy=0.5, percentageSel=0.1, triggerTargetBuyCount=9, triggerTargetSellCount=6, maximumLoosePercentage=3.0}
         initializeTest(0.6, 0.4, 8, 3.1);
-        doTrade(ChartName.Bitmarket24_03);
+        doTrade(ChartName.BITMARKET24_03);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 8, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 
@@ -97,7 +97,7 @@ public class TraderSimulationTest {
     public void testBitmarket24_04() {
         // New best result  11.184704952107936 %  for parameters ParametersTO{percentageBuy=2.2, percentageSel=0.7, triggerTargetCount=4, maximumLoosePercentage=5.0}
         initializeTest(2.2, 0.7, 4, 5.0);
-        doTrade(ChartName.Bitmarket24_04);
+        doTrade(ChartName.BITMARKET24_04);
         Assertions.assertTrue(tradeWalletStatistics().calculateAssetChangeInPercentage() >= 11, " Should be sold at top with earnings " + tradeWalletStatistics().calculateAssetChangeInPercentage());
     }
 

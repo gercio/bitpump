@@ -82,9 +82,7 @@ public class TraderSimulation implements Runnable, WithLog {
             }
 
             // Do trading!
-            if(LOG.isDebugEnabled()) {
-                LOG.debug("Exchange Rate " + exchangeRate + " wallet " + tradeWallet.getTraderWalletTO());
-            }
+            logDebug(LOG, "Exchange Rate {} wallet {}", exchangeRate, tradeWallet.getTraderWalletTO());
             traderFactory.getTrader().doTrades();
             tradeWalletStatistics.updateWalletTO(tradeWallet.getTraderWalletTO());
         }

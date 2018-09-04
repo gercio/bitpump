@@ -68,15 +68,14 @@ public class TraderSimulationRunner implements WithLog {
                     param.setPercentageDownSell(percentageSell);
                     param.setPercentageUpBuy(percentageBuy);
 
-                    ParametersTO parameters = ParametersTOBuilder.aParametersTO().withHistoricalTransactionSource(historical)
+                    ParametersTO pTo = ParametersTOBuilder.aParametersTO().withHistoricalTransactionSource(historical)
                             .withMaximumLoosePercentage(maximumLoosPercentage)
                             .withTradeActionDeciderParameters(param)
                             .withStartMoneyAmount(this.parameters.getMoneyAmount())
                             .withStartDigitalCurrencyAmount(this.parameters.getDigitalCurrencyAmount())
-                            .withCalculateStatisticsOnlyForDX(this.parameters.getCalculateStatisticsOnlyForDX())
                             .build();
 
-                    runSimulation(parameters);
+                    runSimulation(pTo);
         })))));
     }
 
@@ -94,6 +93,7 @@ public class TraderSimulationRunner implements WithLog {
             logInfo(LOG, "Simulation is finished!");
         } catch (InterruptedException e) {
             logWarn(LOG, "Exception " + e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 

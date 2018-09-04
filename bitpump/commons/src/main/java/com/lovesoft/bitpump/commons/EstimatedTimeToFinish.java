@@ -10,18 +10,17 @@ import java.time.temporal.ChronoUnit;
  */
 public class EstimatedTimeToFinish {
     private long startTime = Instant.now().toEpochMilli();
-    private final long MAX_VALUE;
+    private final long maxValue;
 
     public EstimatedTimeToFinish(long maxValue) {
-        MAX_VALUE = maxValue;
+        this.maxValue = maxValue;
     }
 
     public long getEstimatedTimeToFinish(long currentValue) {
         long actualTime = Instant.now().toEpochMilli();
-        double progressPercent = MathSupport.calculatePercentageOfXisY(MAX_VALUE, currentValue);
-        double timePerPercentge = (actualTime - startTime) / progressPercent;
-        long estimatedTimeToFinish = (long) (timePerPercentge * (100 - progressPercent));
-        return estimatedTimeToFinish;
+        double progressPercent = MathSupport.calculatePercentageOfXisY(maxValue, currentValue);
+        double timePerPercentage = (actualTime - startTime) / progressPercent;
+        return (long) (timePerPercentage * (100 - progressPercent));
     }
 
     public String printEstimatedTimeToFinish(long currentValue) {

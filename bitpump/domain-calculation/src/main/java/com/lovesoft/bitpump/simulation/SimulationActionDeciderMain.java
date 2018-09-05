@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created 07.03.2018 18:03.
  */
-public class SimulationActionDeciderMain implements WithLog{
+public class SimulationActionDeciderMain implements WithLog {
     private SimulationHistoricalTransaction history = new SimulationHistoricalTransaction(20);
     private static final Logger LOG = LoggerFactory.getLogger(SimulationActionDeciderMain.class);
 
@@ -47,18 +47,19 @@ public class SimulationActionDeciderMain implements WithLog{
         Thread t = new Thread(simulation);
         t.start();
 
-        while(t.isAlive()) {
+        while (t.isAlive()) {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-               logError(LOG, "Interrupted sleeping." , e);
-               throw new RuntimeException(e);
+                logError(LOG, "Interrupted sleeping.", e);
+                Thread.currentThread().interrupt();
             }
-            logInfo(LOG, "Current wallet statistics earnings -> {} with wallet {} with sell exchange rate {} ", simulation.getTradeWalletStatistics().calculateAssetChangeInPercentage(), simulation.getTradeWalletStatistics().getLastWallet().orElse(null),  simulation.getExchange().getExchangeData().getSellExchangeRate());
+            logInfo(LOG, "Current wallet statistics earnings -> {} with wallet {} with sell exchange rate {} ", simulation.getTradeWalletStatistics().calculateAssetChangeInPercentage(), simulation.getTradeWalletStatistics().getLastWallet().orElse(null), simulation.getExchange().getExchangeData().getSellExchangeRate());
         }
 
     }
+
     public static void main(String[] arg) {
-       new SimulationActionDeciderMain().run();
+        new SimulationActionDeciderMain().run();
     }
 }

@@ -57,15 +57,12 @@ public class SimulationDataSupport {
                 throw new BitPumpRuntimeException("Unknown ChartType " + chartName.getChartType());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new BitPumpRuntimeException(e);
         }
     }
 
     private List<HistoricalTransactionTO> readHistoricalTransactions(InputStream is) {
-
-        ZipInputStream zipIs = new ZipInputStream(is);
-        List<HistoricalTransactionTO> list = TradeExchangeToSerializer.load(zipIs);
-        return list;
+        return TradeExchangeToSerializer.load(new ZipInputStream(is));
     }
 
     private List<HistoricalTransactionTO> toTradeTO(List<Double> doubles) {

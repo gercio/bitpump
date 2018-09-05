@@ -44,6 +44,9 @@ public class AverageWeightValueCalculator {
             sum += value * weight;
             sumWeight += weight;
         }
-        return sum /  sumWeight;
+        if(sumWeight != 0) {
+            return sum /  sumWeight;
+        }
+        throw new BitPumpRuntimeException("Somehow can't calculate average as sumWeight = " + sumWeight + " and can't divide by zero");
     }
 }

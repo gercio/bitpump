@@ -11,9 +11,7 @@ public class HistoricalSourceFromHT implements HistoricalTransactionSource {
     private List<HistoricalTransactionTO> htList = new ArrayList<>();
 
     public HistoricalSourceFromHT(List<HistoricalTransactionTO> historicalTransactionTOList) {
-        historicalTransactionTOList.forEach(to -> {
-            htList.add(new HistoricalTransactionTO(to));
-        });
+        historicalTransactionTOList.forEach(to -> htList.add(new HistoricalTransactionTO(to)));
     }
 
     @Override

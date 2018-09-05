@@ -14,7 +14,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 public class TraderSimulationRunner implements WithLog {
-    private final static Logger LOG = LoggerFactory.getLogger(TraderSimulationRunner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TraderSimulationRunner.class);
     private ThreadPoolExecutor executor;
     private SimulationParametersTO parameters;
     private HistoricalTransactionSource historical;
@@ -98,13 +98,13 @@ public class TraderSimulationRunner implements WithLog {
     }
 
     private void printProgress() {
-        if(printProgress) {
+        if(printProgress && LOG.isInfoEnabled()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Progress " + executor.getCompletedTaskCount() + " / " + executor.getTaskCount());
             sb.append("\t Time to finish [" + timeToFinish.printEstimatedTimeToFinish(executor.getCompletedTaskCount()) + "] ");
             bestResultFinder.getActualBestResult().ifPresent( r -> sb.append(String.format("\t\t Best result = %5.2f" ,r)));
             bestResultFinder.getActualBestResultParameters().ifPresent(p -> sb.append(" for parameters " + p));
-            System.out.println(sb.toString());
+            LOG.info(sb.toString());
         }
     }
 
@@ -126,11 +126,11 @@ public class TraderSimulationRunner implements WithLog {
     }
 
     private IntStream getTriggerTargetStream() {
-        return IntStream.iterate((parameters.getTriggerTargetCountFrom()), n -> n + 1).limit(parameters.getTriggerTargetCountTo() - parameters.getTriggerTargetCountFrom() + 1);
+        return IntStream.iterate((parameters.getTriggerTargetCountFrom()), n -> n + 1).limit(parameters.getTriggerTargetCountTo() - parameters.getTriggerTargetCountFrom() + 1l);
     }
 
     private IntStream getIntStream(int from, int to) {
-        return IntStream.iterate(from, n -> n + 1).limit(to - from + 1);
+        return IntStream.iterate(from, n -> n + 1).limit(to - from + 1l);
     }
 
     private DoubleStream getPercentageSellStream() {

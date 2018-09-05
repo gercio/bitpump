@@ -20,7 +20,7 @@ public class TraderSimulation implements Runnable, WithLog {
     private long counter;
     private TradeWalletStatistics tradeWalletStatistics;
     private HistoricalTransactionSource historicalTransactionSource;
-    private Logger LOG = LoggerFactory.getLogger(TraderSimulation.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TraderSimulation.class);
     private String parameters;
     private Optional<Consumer<TradeWalletStatistics>> statisticsConsumer = Optional.empty();
     private boolean printSummary = false;

@@ -15,6 +15,10 @@ public class TradeExchangeToSerializer {
 
     private static final String SEPARATOR = "|";
 
+    private TradeExchangeToSerializer() {
+
+    }
+
     public static void save(List<? extends TradeExchangeTO> trades, OutputStream outputStream) {
         OutputStreamWriter writer = new OutputStreamWriter(new BufferedOutputStream(outputStream, 10000));
         DateFormat df = Downloader.createDateFormat();
@@ -52,7 +56,7 @@ public class TradeExchangeToSerializer {
                 list.add(ht);
             }
         } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
+            throw new BitPumpRuntimeException(e);
         }
         return list;
     }

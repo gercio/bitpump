@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 
 public class SimpleTrader implements Trader, WithLog {
-    private static Logger LOG = LoggerFactory.getLogger(SimpleTrader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SimpleTrader.class);
 
     private Exchange exchange;
     private TradeActionDecider tradeActionDecider;
@@ -74,11 +74,9 @@ public class SimpleTrader implements Trader, WithLog {
         tradeAmountDecider.setTradeWallet(tradeWallet.getTraderWalletTO());
         tradeAmountDecider.calculateAmount(ta).ifPresent(amount -> {
             if(ta.equals(TradeAction.SELL)) {
-                if(tradeData.getLastBuyExchangeRate().isPresent() && !isStopLoose()) {
-                    if (tradeData.getLastBuyExchangeRate().get() > exchangeData.getSellExchangeRate()) {
-                        logDebug(LOG, "Can't sell it now, because there will be money loos. Buy was for {} and wanna sell for {}", tradeData.getLastBuyExchangeRate().get(), exchangeData.getSellExchangeRate());
-                        return;
-                    }
+                if (!isStopLoose() && isBuyRateBiggerThenSellRate(exchangeData)) {
+                    logDebug(LOG, "Can't sell it now, because there will be money loos. Buy was for {} and wanna sell for {}", tradeData.getLastBuyExchangeRate().get(), exchangeData.getSellExchangeRate());
+                    return;
                 }
                 tradeData.setLastBuyExchangeRate(null);
             }
@@ -88,6 +86,10 @@ public class SimpleTrader implements Trader, WithLog {
                 tradeData.setLastBuyExchangeRate(exchangeData.getBuyExchangeRate());
             }
         });
+    }
+
+    private boolean isBuyRateBiggerThenSellRate(ExchangeDataTO exchangeData) {
+        return tradeData.getLastBuyExchangeRate().isPresent() && tradeData.getLastBuyExchangeRate().get() > exchangeData.getSellExchangeRate();
     }
 
     private void setTradeWallet(TradeWalletTO tradeWallet) {

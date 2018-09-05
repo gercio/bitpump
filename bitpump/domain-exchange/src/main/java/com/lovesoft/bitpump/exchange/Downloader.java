@@ -1,6 +1,7 @@
 package com.lovesoft.bitpump.exchange;
 
 import com.google.common.base.Preconditions;
+import com.lovesoft.bitpump.commons.BitPumpRuntimeException;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,9 @@ public class Downloader {
     private List<ParsingTradeTO> downloadTrades(Long transactionID) {
         String body = downHistoricalTrades(transactionID);
         int last = MAX_LOG_SIZE > body.length() ? body.length() : MAX_LOG_SIZE;
-        LOG.info("Answer = {}...", body.substring(0, last - 1));
+        if(LOG.isInfoEnabled()) {
+            LOG.info("Answer = {}...", body.substring(0, last - 1));
+        }
         return parseTrades(body);
     }
 
@@ -120,14 +123,14 @@ public class Downloader {
             LOG.info("URL = {}", url);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            String body = new String(IOUtils.toString(con.getInputStream(), ENCODING));
+            String body = IOUtils.toString(con.getInputStream(), ENCODING);
             int status = con.getResponseCode();
             if (status != 200) {
                 LOG.error("HTTP error code {}", status);
             }
             return body;
         } catch (IOException e) {
-            throw new RuntimeException("Can't download historical data", e);
+            throw new BitPumpRuntimeException("Can't download historical data", e);
         }
     }
 

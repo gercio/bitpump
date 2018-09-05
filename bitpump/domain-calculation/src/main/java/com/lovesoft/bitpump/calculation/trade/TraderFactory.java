@@ -19,14 +19,13 @@ public class TraderFactory {
     private Exchange exchange;
     private TradeWallet tradeWallet;
     private Trader trader;
-    private TradeActionDecider tradeActionDecider;
     private TradeActionDeciderBuilder tradeActionDeciderBuilder = new TradeActionDeciderBuilder();
     private TradeActionParameters parameters;
 
     private Optional<Double> stopLoosPercentageOptional = Optional.empty();
 
     public TraderFactory() {
-
+        // Intentionally left empty.
     }
 
     public TraderFactory withParameters(TradeActionParameters parameters) {
@@ -46,7 +45,7 @@ public class TraderFactory {
             ((WalletToSupplierObserver) parameters).observerNewWalletToSupplier(tradeWallet);
         }
         exchange = new ExchangeBuilder().withExchangeData( new ExchangeDataTO()).withTradeWallet(tradeWallet).build();
-        tradeActionDecider = tradeActionDeciderBuilder.build(parameters);
+        TradeActionDecider tradeActionDecider = tradeActionDeciderBuilder.build(parameters);
         TraderBuilder traderBuilder = new TraderBuilder().withExchange(exchange)
                 .withTradeActionDecider(tradeActionDecider)
                 .withTradeAmountDecider(new TradeAmountDeciderBuilder().build())

@@ -15,10 +15,12 @@ public class TradeActionDeciderBuilder {
     }
 
     public TradeActionDecider build(TradeActionParameters  parameters) {
+        // Yes, this one is overcomplicated!
         return builders.stream()
                 .map(tad -> (Optional<TradeActionDecider>) tad.build(parameters))
-                .filter( o -> o.isPresent())
+                .filter(Optional::isPresent)
                 .findFirst()
-                .orElseThrow( () -> new BitPumpRuntimeException("Can't find builder for parameters " + parameters)).get();
+                .orElseThrow( () -> new BitPumpRuntimeException("Can't find builder for parameters " + parameters))
+                .orElseThrow( () -> new BitPumpRuntimeException("Can't find builder for parameters2 " + parameters));
     }
 }

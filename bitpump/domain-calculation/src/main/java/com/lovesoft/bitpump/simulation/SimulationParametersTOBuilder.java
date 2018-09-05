@@ -14,7 +14,6 @@ public final class SimulationParametersTOBuilder {
     private double historicalBufferTrimSizePercentage;
     private double moneyAmount;
     private double digitalCurrencyAmount;
-    private boolean calculateStatisticsOnlyForDX = false;
 
     private SimulationParametersTOBuilder() {
     }

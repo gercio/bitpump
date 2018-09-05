@@ -45,7 +45,7 @@ public class HistoricalTransactionsBuffer implements HistoricalTransactionSource
     }
 
     public void trimToPercentOfCapacity(double percentage) {
-        if (historicalTransactionList.size() == 0) {
+        if (historicalTransactionList.isEmpty()) {
             return;
         }
         Preconditions.checkArgument(percentage > 1 && percentage < 99, "Bad percentage " + percentage);
@@ -55,7 +55,7 @@ public class HistoricalTransactionsBuffer implements HistoricalTransactionSource
 
     @Override
     public List<HistoricalTransactionTO> getHistoricalTransactions() {
-        return historicalTransactionList;
+        return getHistoricalTransactionsTO();
     }
 }
 

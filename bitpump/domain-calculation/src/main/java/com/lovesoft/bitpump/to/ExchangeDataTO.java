@@ -11,7 +11,7 @@ public class ExchangeDataTO {
     private double sellExchangeRate;
 
     public ExchangeDataTO() {
-        this(Collections.EMPTY_LIST);
+        this(Collections.emptyList());
     }
 
     public ExchangeDataTO(List<HistoricalTransactionTO> historicalTransactions) {

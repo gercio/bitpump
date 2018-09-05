@@ -42,7 +42,7 @@ public class TraderBuilder {
 
     public Trader build() {
         SimpleTrader trader = new SimpleTrader(exchange, tradeActionDecider, tradeAmountDecider, tradeWallet);
-        OptionalConsumer.of(stopLooseOptional).ifPresent(sl -> trader.setStopLoose(sl));
+        OptionalConsumer.of(stopLooseOptional).ifPresent(trader::setStopLoose);
         return trader;
     }
 }

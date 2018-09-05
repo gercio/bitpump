@@ -2,15 +2,15 @@ package com.lovesoft.bitpump.simulation;
 
 public class SimulationParametersTO {
 
-    private double doubleStep = 0.25;
-    private double percentageBuyFrom;
-    private double percentageBuyTo;
-    private double percentageSelFrom;
-    private double percentageSelTo;
     private int triggerTargetCountFrom;
     private int triggerTargetCountTo;
+    private double percentageBuyFrom;
+    private double percentageBuyTo;
+    private double doubleStep = 0.25;
+    private double percentageSelFrom;
     private double maximumLoosePercentageFrom ;
     private double maximumLoosePercentageTo;
+    private double percentageSelTo;
     private int numberOfThreads;
     private double historicalBufferTrimSizePercentage;
     private double digitalCurrencyAmount;

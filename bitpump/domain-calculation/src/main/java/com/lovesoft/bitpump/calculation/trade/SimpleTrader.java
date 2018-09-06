@@ -89,7 +89,8 @@ public class SimpleTrader implements Trader, WithLog {
     }
 
     private boolean isBuyRateBiggerThenSellRate(ExchangeDataTO exchangeData) {
-        return tradeData.getLastBuyExchangeRate().isPresent() && tradeData.getLastBuyExchangeRate().get() > exchangeData.getSellExchangeRate();
+        Optional<Double> lastBuyExchangeRate = tradeData.getLastBuyExchangeRate();
+        return lastBuyExchangeRate.isPresent() && lastBuyExchangeRate.get() > exchangeData.getSellExchangeRate();
     }
 
     private void setTradeWallet(TradeWalletTO tradeWallet) {
